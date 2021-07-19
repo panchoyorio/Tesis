@@ -104,3 +104,8 @@ autoplot(Base_datos) + facet_free()
 
 #Los archivos que se usan en la publicacion ya no estan disponibles
 
+##Estadística descriptiva
+summary.data.frame(Base_datos)
+Est.desc <- summary.data.frame(Base_datos)
+
+print(Est.desc)
