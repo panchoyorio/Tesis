@@ -3,6 +3,7 @@
 ## La primera vez que li intenté instalar me lanzó una advertencia de que me faltaba rtools, ya lo instalé
 #install.packages("readxl")
 # cargar paquete readxl
+
 library(readxl)
 
 # buscar la ruta del archivo de excel
@@ -35,22 +36,24 @@ library(ggplot2)
 
 # Utilizamos ggplot para graficar con estilo
 
-ggplot(Base_datos)
-plot(Base_datos$tcambio_real)
+# ggplot(Base_datos)
+# plot(Base_datos$tcambio_real)
 
 # Probaré con un histograma
 
-hist(Base_datos)
+# hist(Base_datos)
+
 #Puedo hacerlos para una variable
 #Pruebo con grafico de barras
 #primero genero tabla agrupada
 
-table(Base_datos$tcambio_real)
+# table(Base_datos$tcambio_real)
 #luego procedo a graficar esa variable en barras
-barplot(table(Base_datos$tcambio_real))
+# barplot(table(Base_datos$tcambio_real))
 
 
-# Reunion con Diana y Amaru
+# Reunion con los profes
+# Explican como usar ggplot
 ggplot(Base_datos, aes(x = periodo_tri, y = tcambio_real)) + 
   geom_line() +
   scale_x_continuous(name = "Nombre que yo elijo") +
@@ -65,11 +68,13 @@ ggplot() +
   scale_y_continuous(name = "Periodo") + 
   ggtitle(label = "T.cbio Real vs IPC")
 
+#Aún no soluciono el problema con el eje x (por algun motivo aqui en r, es el eje y)
+
 # Probaré con el ejemplo de un r pubs que me dejó la profe
 
 library(lattice)
 library(ggplot2)
-install.packages("latticeExtra")
+#install.packages("latticeExtra")
 # latticeExtra must be loaded after ggplot2 to prevent masking of `layer`
 library(latticeExtra)
 library(RColorBrewer)
@@ -89,18 +94,18 @@ myArgs <- list(
 
 lattice.options(default.theme=myTheme, default.args=modifyList(
   lattice.options()$default.args, myArgs))
-install.packages("zoo")
+#install.packages("zoo")
 library(zoo)
 
 #Intentaré seguir el ejemplo a ver si aprendo a graficar con mi base de datos 
 
-download.file(
-  url = "https://rstudio-pubs-static.s3.amazonaws.com/aranjuez.RData", 
-  destfile = "Aranjuez"
-)
-Basededatis <- data.frame(Base_datos)
-xyplot(Basededatis, layout = c(1, ncol(Basededatis)))
-autoplot(Base_datos) + facet_free()   
+# download.file(
+#  url = "https://rstudio-pubs-static.s3.amazonaws.com/aranjuez.RData", 
+#  destfile = "Aranjuez"
+# )
+# Basededatis <- data.frame(Base_datos)
+# xyplot(Basededatis, layout = c(1, ncol(Basededatis)))
+# autoplot(Base_datos) + facet_free()   
 
 #Los archivos que se usan en la publicacion ya no estan disponibles
 
@@ -108,4 +113,18 @@ autoplot(Base_datos) + facet_free()
 summary.data.frame(Base_datos)
 Est.desc <- summary.data.frame(Base_datos)
 
-print(Est.desc)
+Est.desc
+
+## Le diré a r que estos datos son una serie de tiempo
+#Para eso debo usar las siguientes librerias 
+
+# install.packages("tidyverse")
+# install.packages("stringi", type = "win.binary")
+
+library(tidyverse)
+library(lubridate)
+
+Base_datos.ts = ts(Base_datos, start = 1985, frequency = 4)
+Base_datos.ts
+
+plot(Base_datos.ts)
