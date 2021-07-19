@@ -1,4 +1,4 @@
-# Tesis
+# Trabajo de Titulo
 ## Enfermedad Holandesa en Chile 1985 - 2020
 
 ![Sindromeholandes](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_gi_uUa9tocKPA4koHD1PogzQ_6Zw9ueSxA&usqp=CAU)
