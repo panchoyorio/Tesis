@@ -128,3 +128,11 @@ Base_datos.ts = ts(Base_datos, start = 1985, frequency = 4)
 Base_datos.ts
 
 plot(Base_datos.ts)
+
+## Intento usar ggplot para graficar Base_datos.ts pero me dice que data debe ser un dataframe
+
+ggplot(Base_datos.ts, aes(x = tcambio_real, y = tasa_IPC )) + 
+  geom_line() +
+  scale_x_continuous(name = "Nombre que yo elijo") +
+  scale_y_continuous(name = "Falasia del Nirvana") + 
+  ggtitle(label = "Grafico muy cool")
