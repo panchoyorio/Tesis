@@ -576,3 +576,44 @@ var1_DESVAR_pcob
 #Descompocición de la varianza ante una innovación en el tipo de cambio real
 var1_DESVAR_tcam=fevd(var1, n.ahead=50)$logtcambio_real_dif
 var1_DESVAR_tcam
+
+### CAMBIOS ESTRUCTURALES
+#Generamos un modelo de regresion respecto a una constante  (le pusimos 1)
+#Prueba de Chow 
+
+modelo=Fstats(precio_cobre~1, from = .01)
+
+#Prueba para cambios estructurales
+sctest(modelo)
+
+#H0: No hay cambio estructural en la serie (pvalue>0.05)
+#H1: Hay cambio estructural en la serie (pvalue<0.05)
+
+#Entrega un valor p muy pequeño, determinamos que se rechaza H0, hay cambio estructural
+
+### La prueba estadistica de Chow nos dice que sí hay cambios estructurales
+##Lo que sigue es saber en que fecha estuvieron esos cambios y graficar
+
+strucchange::breakpoints(precio_cobre~1)
+
+#Dice que la podemos partir en 3 partes, los quiebres serian en el 4° trimestre
+#del 2005, y el 4° trimestre del 2014
+## Investigué, el cobre cerró el 2005 con un precio histórico debido a la escacez
+#de reservas provocada por un aumento de demanda China
+# El 2014 el precio alcanza su nivel más bajo, superando la crisis del 2008
+#Debido a la desaceleración de la economía del gigante asiatico
+
+BP=strucchange::breakpoints(precio_cobre~1)
+
+summary(BP)
+
+#Dice que hay 5 fuertes cambios estructurales, pero lo dividiermos por 3 como 
+plot(BP)
+plot(precio_cobre)
+lines(BP)
+
+## Revisamos los intervalos e confianza para probar los cambios estructurales
+
+Interconf=confint(BP)
+Interconf
+lines(Interconf)
