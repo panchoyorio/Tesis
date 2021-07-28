@@ -10,7 +10,7 @@ library(readxl)
 #file.choose()
 
 # Copiar ruta de la consola y guardar en variable
-ruta_excel <- "C:\\Users\\fcoyo\\Desktop\\Tesis\\BBDD Consolidada (version 1).xlsb.xlsx"
+ruta_excel <- "C:\\Users\\fcoyo\\Documents\\GitHub\\Tesis\\BBDD Consolidada (version 1).xlsb.xlsx"
 # como mirar las hojas de tu excel
 excel_sheets(ruta_excel)
 
