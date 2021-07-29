@@ -23,7 +23,7 @@ library(xts)
 #Importamos la base de datos
 
 #file.choose()
-ruta_excel <- "C:\\Users\\fcoyo\\Documents\\GitHub\\Tesis\\BBDD Consolidada (version 1).xlsb.xlsx"
+ruta_excel <-  "C:\\Users\\fcoyo\\Documents\\GitHub\\Tesis\\Base de Datos Oficial.xlsx"
 Base_datos <- read_excel(ruta_excel,
                          sheet = "DATOS.TS")
 
@@ -45,8 +45,8 @@ tasa_colocación = ts(Base_datos.ts[,5], start=1985, freq=4)
 tasa_colocación
 tasa_IPC = ts(Base_datos.ts[,6], start=1985, freq=4)
 tasa_IPC
-tasa_IPCX = ts(Base_datos.ts[,2], start=1985, freq=4)
-tasa_IPCX
+tasa_IPC_acum = ts(Base_datos.ts[,7], start=1985, freq=4)
+tasa_IPC_acum
 precio_cobre = ts(Base_datos.ts[,8], start=1985, freq=4)
 precio_cobre
 
@@ -56,17 +56,15 @@ plot(tcambio_dolarobs, ylab="Precio", xlab="Trimestres", main="Valor del dolar o
 plot(tasa_TPM, ylab="Tasa", xlab="Trimestres", main="TPM", col="blue")
 plot(tasa_captación, ylab="Tasa", xlab="Trimestres", main="Tasa de Captación", col="blue")
 plot(tasa_colocación, ylab="Tasa", xlab="Trimestres", main="Tasa de Colocación", col="blue")
-plot(tasa_IPC, ylab="Índice", xlab="Trimestres", main="IPC", col="blue")
-plot(tasa_IPCX, ylab="Índice", xlab="Trimestres", main="IPC Subyacente", col="blue")
+plot(tasa_IPC, ylab="Índice", xlab="Trimestres", main="IPC variación mensual", col="blue")
+plot(tasa_IPC_acum, ylab="Índice", xlab="Trimestres", main="IPC variación mismo periodo, año anterior", col="blue")
 plot(precio_cobre, ylab="Precio", xlab="Trimestres", main="Precio del cobre en Chile", col="blue")
 
 
 ### Gráficos estacionales para el tipo de cambio real, la TPM, y el precio del cobre
 
 seasonplot(tcambio_real, col=rainbow(12), year.labels = TRUE, main = "Grafico Estacional - Tipo de Cambio Real")
-
 seasonplot(tasa_TPM, col=rainbow(12), year.labels = TRUE, main = "Grafico Estacional - TPM")
-
 seasonplot(precio_cobre, col=rainbow(12), year.labels = TRUE, main = "Grafico Estacional - Precio del Cobre")
 
 ## Observamos las funciones de autocorrelación de cada variable para ver si son estacionarias
@@ -77,7 +75,7 @@ acf(tasa_TPM)
 acf(tasa_captación)
 acf(tasa_colocación)
 acf(tasa_IPC)
-acf(tasa_IPCX)
+acf(tasa_IPC_acum)
 acf(precio_cobre)
 
 
@@ -89,7 +87,7 @@ ndiffs(tasa_TPM)
 ndiffs(tasa_captación)
 ndiffs(tasa_colocación)
 ndiffs(tasa_IPC)
-ndiffs(tasa_IPCX)
+ndiffs(tasa_IPC_acum)
 ndiffs(precio_cobre)
 
 ### Todas requieren solo de la primera diferencia
@@ -101,7 +99,7 @@ tasa_TPM_diff=diff(tasa_TPM)
 tasa_captación_diff=diff(tasa_captación)
 tasa_colocación_diff=diff(tasa_colocación)
 tasa_IPC_diff=diff(tasa_IPC)
-tasa_IPCX_diff=diff(tasa_IPCX)
+tasa_IPC_acum_diff=diff(tasa_IPC_acum)
 precio_cobre_diff=diff(precio_cobre)
 
 #Graficamos
@@ -113,8 +111,8 @@ plot(tcambio_dolarobs_diff, ylab="Precio", xlab="Trimestres", main="Valor del do
 plot(tasa_TPM_diff, ylab="Tasa", xlab="Trimestres", main="TPM", col="blue")
 plot(tasa_captación_diff, ylab="Tasa", xlab="Trimestres", main="Tasa de Captación", col="blue")
 plot(tasa_colocación_diff, ylab="Tasa", xlab="Trimestres", main="Tasa de Colocación", col="blue")
-plot(tasa_IPC_diff, ylab="Índice", xlab="Trimestres", main="IPC", col="blue")
-plot(tasa_IPCX_diff, ylab="Índice", xlab="Trimestres", main="IPC Subyacente", col="blue")
+plot(tasa_IPC_diff, ylab="Índice", xlab="Trimestres", main="IPC mensual", col="blue")
+plot(tasa_IPC_acum_diff, ylab="Índice", xlab="Trimestres", main="IPC variación año anterior", col="blue")
 plot(precio_cobre_diff, ylab="Precio", xlab="Trimestres", main="Precio del cobre en Chile", col="blue")
 
 ##Autocorrelaciones
@@ -125,7 +123,7 @@ acf(tasa_TPM_diff)
 acf(tasa_captación_diff)
 acf(tasa_colocación_diff)
 acf(tasa_IPC_diff)
-acf(tasa_IPCX_diff)
+acf(tasa_IPC_acum_diff)
 acf(precio_cobre_diff)
 
 #Comparaciones 
@@ -161,8 +159,8 @@ adf.test(tasa_colocación, alternative = "stationary")
 #p-value = 0.07162
 adf.test(tasa_IPC, alternative = "stationary")
 #p-value = 0.2413
-adf.test(tasa_IPCX, alternative = "stationary")
-#p-value = 0.5357
+adf.test(tasa_IPC_acum, alternative = "stationary")
+#p-value = 0.61111
 adf.test(precio_cobre, alternative = "stationary")
 #p-value = 0.5098
 
@@ -182,7 +180,7 @@ adf.test(tasa_colocación_diff, alternative = "stationary")
 #p-value = 0.01
 adf.test(tasa_IPC_diff, alternative = "stationary")
 #p-value = 0.01
-adf.test(tasa_IPCX_diff, alternative = "stationary")
+adf.test(tasa_IPC_acum_diff, alternative = "stationary")
 #p-value = 0.01
 adf.test(precio_cobre_diff, alternative = "stationary")
 #p-value = 0.01
@@ -209,11 +207,11 @@ pacf(tasa_captación_diff, main="Función de Auto Correlación Parcial")
 acf(tasa_colocación_diff, main="Tasa de Colocación - Función de Auto Correlación")
 pacf(tasa_colocación_diff, main="Función de Auto Correlación Parcial")
 
-acf(tasa_IPC_diff, main="IPC - Función de Auto Correlación")
+acf(tasa_IPC_diff, main="IPC mensual - Función de Auto Correlación")
 pacf(tasa_IPC_diff, main="Función de Auto Correlación Parcial")
 
-acf(tasa_IPCX_diff, main="IPCX - Función de Auto Correlación")
-pacf(tasa_IPCX_diff, main="Función de Auto Correlación Parcial")
+acf(tasa_IPC_acum_diff, main="IPC variación anual - Función de Auto Correlación")
+pacf(tasa_IPC_acum_diff, main="Función de Auto Correlación Parcial")
 
 acf(precio_cobre_diff, main="Precio del Cobre - Función de Auto Correlación")
 pacf(precio_cobre_diff, main="Función de Auto Correlación Parcial")
@@ -229,7 +227,7 @@ pacf(ts(precio_cobre_dif, frequency=1))
 #Para graficar
 par(mfrow=c(1,1), mar=c(4,4,4,1) + .1)
 
-ts.plot(precio_cobre_diff, tcambio_real_diff, tasa_TPM_diff, tasa_captación_diff, tasa_colocación_diff, tasa_IPC_diff, tasa_IPCX_diff, tcambio_dolarobs_diff, col=c( "blue", "red", "orange", "yellow", "green", "pink", "black", "brown"))
+ts.plot(precio_cobre_diff, tcambio_real_diff, tasa_TPM_diff, tasa_captación_diff, tasa_colocación_diff, tasa_IPC_diff, tasa_IPC_acum_diff, tcambio_dolarobs_diff, col=c( "blue", "red", "orange", "yellow", "green", "pink", "black", "brown"))
 
 ##El gráfico no se ve bien porque la variable tipo de cambio (real y dolar obs) 
 #poseen valores muy altos, usaré logaritmos
@@ -241,7 +239,7 @@ logtasa_TPM <- log(tasa_TPM)
 logtasa_captación <- log(tasa_captación)
 logtasa_colocación <- log(tasa_colocación)
 logtasa_IPC <- log(tasa_IPC)
-logtasa_IPCX <- log(tasa_IPCX)
+logtasa_IPC_acum <- log(tasa_IPC_acum)
 logprecio_cobre <- log(precio_cobre)
 
 # Warning message:
@@ -253,17 +251,17 @@ log_tasa_TPM_diff=diff(logtasa_TPM)
 log_tasa_captación_diff=diff(logtasa_captación)
 log_tasa_colocación_diff=diff(logtasa_colocación)
 log_tasa_IPC_diff=diff(logtasa_IPC)
-log_tasa_IPCX_diff=diff(logtasa_IPCX)
+log_tasa_IPC_acum_diff=diff(logtasa_IPC_acum)
 log_precio_cobre_diff=diff(logprecio_cobre) 
 
 
 
 #Segundo intento
 
-ts.plot(precio_cobre_diff, log_tcambio_real_diff, tasa_TPM_diff, tasa_captación_diff, tasa_colocación_diff, tasa_IPC_diff, tasa_IPCX_diff, log_tcambio_dolarobs_diff, col=c( "blue", "red", "orange", "yellow", "green", "pink", "black", "brown"))
+ts.plot(precio_cobre_diff, log_tcambio_real_diff, tasa_TPM_diff, tasa_captación_diff, tasa_colocación_diff, tasa_IPC_diff, tasa_IPC_acum_diff, log_tcambio_dolarobs_diff, col=c( "blue", "red", "orange", "yellow", "green", "pink", "black", "brown"))
 
-#Se elimina la tasa IPCX, se usan Logaritmos
-ts.plot(log_precio_cobre_diff, log_tcambio_real_diff, log_tasa_TPM_diff, log_tasa_captación_diff, log_tasa_colocación_diff, log_tasa_IPC_diff, log_tcambio_dolarobs_diff, col=c( "blue", "red", "orange", "yellow", "green", "pink", "brown"))
+#Se usan Logaritmos
+ts.plot(log_precio_cobre_diff, log_tcambio_real_diff, log_tasa_TPM_diff, log_tasa_captación_diff, log_tasa_colocación_diff, log_tasa_IPC_diff, log_tasa_IPC_acum_diff, log_tcambio_dolarobs_diff, col=c( "blue", "red", "orange", "yellow", "green", "pink", "black", "brown"))
 
 # El grafico se ve mejor
 
@@ -275,8 +273,8 @@ ts.plot(log_precio_cobre_diff, log_tcambio_real_diff, log_tasa_TPM_diff, log_tas
 
 grangertest(log_precio_cobre_diff~log_tcambio_real_diff, order = 1)
 grangertest(precio_cobre_diff~tcambio_real_diff, order = 1)
-# Con la prueba de primer orden nos da 0.005668, < 0,05
-# (al usar las variables sin log da 0.007238)
+# Con la prueba de primer orden nos da 0.005668 **, < 0,05
+# (al usar las variables sin log da 0.007238 **)
 #Esto indica que se debe rechazar la hipotesis nula, el precio del cobre sí es 
 #causado en el sentido de granger por el tipo de cambio real
 
@@ -286,8 +284,9 @@ grangertest(precio_cobre_diff~tcambio_real_diff, order = 1)
 # H1: El tipo de cambio real sí es causado en el sentido de granger por el  precio del cobre < 0,05
 
 grangertest(log_tcambio_real_diff~log_precio_cobre_diff, order = 1)
+grangertest(tcambio_real_diff~precio_cobre_diff, order = 1)
 
-#En este sentido nos da 0.03073 < 0,05 (al usar las variables sin log da 0.01681), 
+#En este sentido nos da 0.03073 * < 0,05 (al usar las variables sin log da 0.01681 *), 
 #por ende tambien se rechaza la hipotesis nula, lo que
 #quiere decir que el precio del cobre sí causa al tipo de cambio real
 
@@ -300,7 +299,8 @@ grangertest(log_tcambio_real_diff~log_precio_cobre_diff, order = 1)
 grangertest(log_tcambio_real_diff~log_tasa_TPM_diff, order = 1)
 grangertest(tcambio_real_diff~tasa_TPM_diff, order = 1)
 #Se obtuvo  0.7623 > 0,05, por lo que se acepta la hipotesis nula, no hay causalidad
-#de la TPM sobre el tipo de cambio.
+#0.5273 sin log
+
 #Se hace la prueba de segundo orden
 grangertest(log_tcambio_real_diff~log_tasa_TPM_diff, order = 2)
 grangertest(tcambio_real_diff~tasa_TPM_diff, order = 2)
@@ -349,7 +349,7 @@ grangertest(tasa_TPM_diff~tcambio_real_diff, order = 2)
 #0.053, 0.06
 grangertest(log_tasa_TPM_diff~log_tcambio_real_diff, order = 3)
 grangertest(tasa_TPM_diff~tcambio_real_diff, order = 3)
-#0.01, 0.02
+#0.01036 *, 0.02614 *
 
 ### Se encuentra causalidad desde el tipo de cambio real a la tpm 
 # a partir del tercer rezago
@@ -358,55 +358,57 @@ grangertest(tasa_TPM_diff~tcambio_real_diff, order = 3)
 # H1: El precio del cobre real sí es causado en el sentido de granger por la TPM < 0,05
 
 grangertest(log_precio_cobre_diff~log_tasa_TPM_diff, order = 1)
-## 0,2699
+grangertest(precio_cobre_diff~tasa_TPM_diff, order = 1)
 
-grangertest(log_precio_cobre_diff~log_tasa_TPM_diff, order = 2)
-grangertest(precio_cobre_diff~tasa_TPM_diff, order = 2)
+## 0.2699, 0.04484 *
+
+#grangertest(log_precio_cobre_diff~log_tasa_TPM_diff, order = 2)
+#grangertest(precio_cobre_diff~tasa_TPM_diff, order = 2)
 #0.6, 0.3
 
-grangertest(log_precio_cobre_diff~log_tasa_TPM_diff, order = 3)
-grangertest(precio_cobre_diff~tasa_TPM_diff, order = 3)
+#grangertest(log_precio_cobre_diff~log_tasa_TPM_diff, order = 3)
+#grangertest(precio_cobre_diff~tasa_TPM_diff, order = 3)
 #0.4, 0.5
 
-grangertest(log_precio_cobre_diff~log_tasa_TPM_diff, order = 4)
-grangertest(precio_cobre_diff~tasa_TPM_diff, order = 4)
+#grangertest(log_precio_cobre_diff~log_tasa_TPM_diff, order = 4)
+#grangertest(precio_cobre_diff~tasa_TPM_diff, order = 4)
 #0.7, 0.5
 
-grangertest(log_precio_cobre_diff~log_tasa_TPM_diff, order = 5)
-grangertest(precio_cobre_diff~tasa_TPM_diff, order = 5)
+#grangertest(log_precio_cobre_diff~log_tasa_TPM_diff, order = 5)
+#grangertest(precio_cobre_diff~tasa_TPM_diff, order = 5)
 #0.8, 0.8
-grangertest(log_precio_cobre_diff~log_tasa_TPM_diff, order = 6)
-grangertest(precio_cobre_diff~tasa_TPM_diff, order = 6)
+#grangertest(log_precio_cobre_diff~log_tasa_TPM_diff, order = 6)
+#grangertest(precio_cobre_diff~tasa_TPM_diff, order = 6)
 #0.8, 0.6
-grangertest(log_precio_cobre_diff~log_tasa_TPM_diff, order = 7)
-grangertest(precio_cobre_diff~tasa_TPM_diff, order = 7)
+#grangertest(log_precio_cobre_diff~log_tasa_TPM_diff, order = 7)
+#grangertest(precio_cobre_diff~tasa_TPM_diff, order = 7)
 #0.8, 0.3
-grangertest(log_precio_cobre_diff~log_tasa_TPM_diff, order = 8)
-grangertest(precio_cobre_diff~tasa_TPM_diff, order = 8)
+#grangertest(log_precio_cobre_diff~log_tasa_TPM_diff, order = 8)
+#grangertest(precio_cobre_diff~tasa_TPM_diff, order = 8)
 #0.9, 0.7 
-grangertest(log_precio_cobre_diff~log_tasa_TPM_diff, order = 9)
-grangertest(precio_cobre_diff~tasa_TPM_diff, order = 9)
+#grangertest(log_precio_cobre_diff~log_tasa_TPM_diff, order = 9)
+#grangertest(precio_cobre_diff~tasa_TPM_diff, order = 9)
 #0.9, 0.7
-grangertest(log_precio_cobre_diff~log_tasa_TPM_diff, order = 10)
-grangertest(precio_cobre_diff~tasa_TPM_diff, order = 10)
+#grangertest(log_precio_cobre_diff~log_tasa_TPM_diff, order = 10)
+#grangertest(precio_cobre_diff~tasa_TPM_diff, order = 10)
 #0.8, 0.7
-grangertest(log_precio_cobre_diff~log_tasa_TPM_diff, order = 11)
-grangertest(precio_cobre_diff~tasa_TPM_diff, order = 11)
+#grangertest(log_precio_cobre_diff~log_tasa_TPM_diff, order = 11)
+#grangertest(precio_cobre_diff~tasa_TPM_diff, order = 11)
 #0.5, 0.5
-grangertest(log_precio_cobre_diff~log_tasa_TPM_diff, order = 12)
-grangertest(precio_cobre_diff~tasa_TPM_diff, order = 12)
+#grangertest(log_precio_cobre_diff~log_tasa_TPM_diff, order = 12)
+#grangertest(precio_cobre_diff~tasa_TPM_diff, order = 12)
 #0.6, 0.6
 
-# No se encuentra evidencia para causalidad desde la TPM al precio del cobre
+# Se encuentra evidencia para causalidad desde la TPM al precio del cobre
 
 # H0: La TPM no es causada en el sentido de granger por el precio del cobre > 0,05
 # H1: La TPM sí es causada en el sentido de granger por el precio del cobre < 0,05
 
 grangertest(log_tasa_TPM_diff~log_precio_cobre_diff, order = 1)
 grangertest(tasa_TPM_diff~precio_cobre_diff, order = 1)
-#0.3, 0.0002759
+#0.3063, 0.0002759 ***
 grangertest(log_tasa_TPM_diff~log_precio_cobre_diff, order = 2)
-##0,0004332
+##0,0004332 ***
 
 #Se encuentra evidencia de causalidad desde el precio del cobre al TPM (segundo orden)
 
@@ -415,7 +417,7 @@ grangertest(log_tasa_TPM_diff~log_precio_cobre_diff, order = 2)
 
 grangertest(tasa_TPM_diff~tasa_IPC_diff, order = 1)
 ##Se genera un error al sacar logaritmo del IPC, se usan ambas variable sin log
-#Entrega un resultado de 0,02, por lo que se recaza la hip nula
+#Entrega un resultado de 0.02035 *, por lo que se rechaza la hip nula
 
 #Sí hay causalidad desde el IPC a la TPM (Tiene sentido puesto que la TPM se hace
 #justamente para controlar la inflación medida en el IPC)
@@ -535,7 +537,7 @@ tasa_IPC_diff=ts(tasa_IPC_diff, start = 1985, freq = 4)
 tcambio_dolarobs_diff=ts(tcambio_dolarobs_diff, start = 1985, freq = 4)
 tasa_captación_diff=ts(tasa_captación_diff, start = 1985, freq = 4)
 tasa_colocación_diff=ts(tasa_colocación_diff, start = 1985, freq = 4)
-tasa_IPCX_diff=ts(tasa_IPCX_diff, start = 1985, freq = 4)
+tasa_IPC_acum_diff=ts(tasa_IPC_acum_diff, start = 1985, freq = 4)
 
 ejvar <- cbind(tcambio_real_diff, precio_cobre_diff, tasa_TPM_diff, tasa_IPC_diff)
 ejvar
