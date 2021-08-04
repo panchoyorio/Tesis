@@ -29,7 +29,21 @@ Base_datos <- read_excel(ruta_excel,
 
 Base_datos.ts = ts(Base_datos, start = 1985, frequency = 4)
 Base_datos.ts
-plot(Base_datos.ts)
+plot(Base_datos.ts, main="Comportamiento de las variables")
+
+
+#Creo una base sin dummys solo para hacer un grafico bonito
+Base_datos_sin_dummys <- read_excel(ruta_excel,
+                         sheet = "Datossindummys")
+
+Base_datos_sin_dummys = ts(Base_datos_sin_dummys, start = 1985, frequency = 4)
+Base_datos_sin_dummys
+plot(Base_datos_sin_dummys, main="Comportamiento de las variables")
+
+
+#Creo una base solo con las variables que hasta ahora he incluido en el VAR
+
+#plot(ejvar, main="Comportamiento de las variables")
 
 #Separo las variables 
 
@@ -49,7 +63,10 @@ tasa_IPC_acum = ts(Base_datos.ts[,7], start=1985, freq=4)
 tasa_IPC_acum
 precio_cobre = ts(Base_datos.ts[,8], start=1985, freq=4)
 precio_cobre
-
+tipo_gob =  ts(Base_datos.ts[,9], start=1985, freq=4)
+tipo_gob
+crisis_ec =  ts(Base_datos.ts[,10], start=1985, freq=4)
+crisis_ec
 #Graficos 
 plot(tcambio_real, ylab="Precio", xlab="Trimestres", main="Tipo de Cambio Real en Chile", col="blue")
 plot(tcambio_dolarobs, ylab="Precio", xlab="Trimestres", main="Valor del dolar observado en Chile", col="blue")
@@ -77,7 +94,7 @@ acf(tasa_colocación)
 acf(tasa_IPC)
 acf(tasa_IPC_acum)
 acf(precio_cobre)
-
+acf(tipo_gob)
 
 ##Ninguna de las variables tiene estacionariedad
 
@@ -89,8 +106,10 @@ ndiffs(tasa_colocación)
 ndiffs(tasa_IPC)
 ndiffs(tasa_IPC_acum)
 ndiffs(precio_cobre)
+ndiffs(tipo_gob)
+ndiffs(crisis_ec)
 
-### Todas requieren solo de la primera diferencia
+### Todas requieren solo de la primera diferencia, exepto la variable crisis (0)
 
 
 tcambio_real_diff=diff(tcambio_real)
@@ -101,6 +120,8 @@ tasa_colocación_diff=diff(tasa_colocación)
 tasa_IPC_diff=diff(tasa_IPC)
 tasa_IPC_acum_diff=diff(tasa_IPC_acum)
 precio_cobre_diff=diff(precio_cobre)
+tipo_gob_diff=diff(tipo_gob)
+crisis_ec_diff=diff(crisis_ec)
 
 #Graficamos
 
@@ -163,6 +184,10 @@ adf.test(tasa_IPC_acum, alternative = "stationary")
 #p-value = 0.61111
 adf.test(precio_cobre, alternative = "stationary")
 #p-value = 0.5098
+adf.test(tipo_gob, alternative = "stationary")
+#p-value = 0.422
+adf.test(crisis_ec, alternative = "stationary")
+#p-value = 0,25584
 
 #Para todas las variables se obtuvieron p values > 0,05 a exepción de la TPM
 #Esto es raro ya que indica estacionarieda, pero ndiffs me sugiere que se necesita
@@ -183,6 +208,10 @@ adf.test(tasa_IPC_diff, alternative = "stationary")
 adf.test(tasa_IPC_acum_diff, alternative = "stationary")
 #p-value = 0.01
 adf.test(precio_cobre_diff, alternative = "stationary")
+#p-value = 0.01
+adf.test(tipo_gob_diff, alternative = "stationary")
+#p-value = 0.01
+adf.test(crisis_ec_diff, alternative = "stationary")
 #p-value = 0.01
 
 ##Todas las variables (diferencias) arrojan pvalue < 0,05
@@ -221,8 +250,8 @@ pacf(precio_cobre_diff, main="Función de Auto Correlación Parcial")
 
 #Para que el rezago coincida con las frecuencias, le damos la sig instrucción
 
-acf(ts(precio_cobre_dif, frequency=1))
-pacf(ts(precio_cobre_dif, frequency=1))
+acf(ts(precio_cobre_diff, frequency=1))
+pacf(ts(precio_cobre_diff, frequency=1))
 
 #Para graficar
 par(mfrow=c(1,1), mar=c(4,4,4,1) + .1)
@@ -336,6 +365,15 @@ grangertest(log_tcambio_real_diff~log_tasa_TPM_diff, order = 12)
 grangertest(tcambio_real_diff~tasa_TPM_diff, order = 12)
 #0.44, 0.12
 
+
+###Prueba de granger con las dummy
+grangertest(tcambio_real_diff~tipo_gob_diff, order = 1)
+grangertest(tcambio_real_diff~tipo_gob_diff, order = 2)
+grangertest(tcambio_real_diff~tipo_gob_diff, order = 3)
+grangertest(tcambio_real_diff~tipo_gob_diff, order = 4)
+grangertest(tcambio_real_diff~tipo_gob_diff, order = 5)
+grangertest(tcambio_real_diff~tipo_gob_diff, order = 6)
+
 #Se puede concluir que no hay causalidad para ningun rezago 
 
 # H0:La TPM no es causada en el sentido de granger por el tipo de cambio real > 0,05
@@ -343,7 +381,7 @@ grangertest(tcambio_real_diff~tasa_TPM_diff, order = 12)
 
 grangertest(log_tasa_TPM_diff~log_tcambio_real_diff, order = 1)
 grangertest(tasa_TPM_diff~tcambio_real_diff, order = 1)
-#0.2, 0.49
+#0.21, 0.49
 grangertest(log_tasa_TPM_diff~log_tcambio_real_diff, order = 2)
 grangertest(tasa_TPM_diff~tcambio_real_diff, order = 2)
 #0.053, 0.06
@@ -538,9 +576,13 @@ tcambio_dolarobs_diff=ts(tcambio_dolarobs_diff, start = 1985, freq = 4)
 tasa_captación_diff=ts(tasa_captación_diff, start = 1985, freq = 4)
 tasa_colocación_diff=ts(tasa_colocación_diff, start = 1985, freq = 4)
 tasa_IPC_acum_diff=ts(tasa_IPC_acum_diff, start = 1985, freq = 4)
-
+tipo_gob_diff=ts(tipo_gob_diff, start = 1985, freq = 4)
+crisis_ec_diff=ts(crisis_ec_diff, start = 1985, freq = 4)
+  
+  
 ejvar <- cbind(tcambio_real_diff, precio_cobre_diff, tasa_TPM_diff, tasa_IPC_diff)
 ejvar
+
 VARselect(ejvar, lag.max = 12)
 
 ## 2 de los criterios indican orden 1, los otros 2 indican orden 5
@@ -604,6 +646,7 @@ arch1$arch.mul
 ##REVISAR
 
 ####Modelo impulso respuesta
+
 # 1° Veremos el impulso respuesta del precio del cobre, ante una innovación en las otras variables
 
 irf_pcob=irf(var1, response ="precio_cobre_diff", n.ahead=8, boot=TRUE)
@@ -636,8 +679,14 @@ plot(irf_TPM)
 
 irf_IPC=irf(var1, response ="tasa_IPC_diff", n.ahead=8, boot=TRUE)
 irf_IPC
-
 plot(irf_IPC)
+
+###Impulso respuesta acumulado
+
+irf_pcob_ac=irf(var1, response ="precio_cobre_diff", n.ahead=8, ortho = FALSE,
+             cumulative=TRUE)
+irf_pcob_ac
+plot(irf_pcob_ac)
 
 #Descompocición de la varianza ante una innovación en el precio del cobre
 #(le estamos pidiendo 50 observaciones hacia adelante como pronostico)
@@ -647,13 +696,237 @@ DESVAR_pcob
 #Descompocición de la varianza ante una innovación en el tipo de cambio real
 DESVAR_tcamr=fevd(var1, n.ahead=50)$tcambio_real_diff
 DESVAR_tcamr
-
+plot(DESVAR_pcob)
 #Descompocición de la varianza ante una innovación en la TPM
 DESVAR_TPM=fevd(var1, n.ahead=50)$tasa_TPM_diff
 DESVAR_TPM
+
 
 #Descompocición de la varianza ante una innovación en el IPC
 DESVAR_IPC=fevd(var1, n.ahead=50)$tasa_IPC_diff
 DESVAR_IPC
 
+
+
+
+############################
+
+
+
+#VAR 2
+
+ejvar2 <- cbind(tcambio_real_diff, precio_cobre_diff, tasa_TPM_diff, tasa_IPC_diff, tipo_gob_diff, crisis_ec_diff)
+VARselect(ejvar2, lag.max = 12)
+
+## 3 de los 4 criterios indican orden 1, 1 indica orden 5
+# Partiremos con el orden 1
+var2 <- VAR(ejvar2, p=1)
+var2
+
+summary(var2)
+##Roots of the characteristic polynomial:
+## son todas menores a 1, podemos decir que se satisface la condición 
+#de estabilidad.
+
+#Lo graficamos
+plot(var2)
+
+###Haremos la prueba de autocorrelación serial en los residuales
+
+# H0: Los residuales no están correlacionados, -> p value > 0,05 Aceptar H0 -- No rechazar H0
+# H1: Los residuales si están correlacionados, -> p value < 0,05 Aceptar H1 -- Rechazar H0
+
+serialvar2 <- serial.test(var2, lags.pt = 1, type = "PT.asymptotic")
+serialvar2$serial
+
+## Obtuvimos 2.2e-16, que es muy cercano a 0 y < a 0,05
+#Por ende, rechazamos la hipotesis nula, los residuales sí están correlaciondos 
+#Hay presencia de correlación serial
+
+
+###Procedemos a hacer la prueba de normaliad de los residuales
+
+## Nos vamos a fijar en los p value de la kurtosis y del sesgo (skewness)
+
+#H0: Los residuales se distribuyen normal   (pvalue > 0,05 -> Aceptamos H0)
+#H1: Los residuales no se distribuyen normal (pvalue < 0,05 -> Rechazamos H0)
+
+normvar2=normality.test(var2)
+normvar2$jb.mul
+
+#Sesgo -> p-value = 4.932e-13
+#kurtosis -> p-value < 2.2e-16
+
+##Se concluye que no hay normalidad, valores p < 0,05
+
+#Procedemos a realizar la prueba de homocedasticidad de la varianza de los residuales
+
+arch2 <- arch.test(var2, lags.multi = 1)
+
+## ME TIRÓ UN MONTON DE MENSAJES WARNING (9) DEL ESTILO: 
+
+#Warning messages:
+#1: In doTryCatch(return(expr), name, parentenv, handler) :
+# display list redraw incomplete   (ERAN TODOS IGUALES)
+
+
+#H0: La varianza de los residuales es constante (pvalue >  0,05) 
+#H1: La varianza de los residuales no es constante (pvalue < 0,05)
+
+arch2$arch.mul
+#p-value = 4.552e-08, esto quiere decir que la varianza de los residuales no es constante
+##REVISAR
+
+####Modelo impulso respuesta
+
+# 1° Veremos el impulso respuesta del precio del cobre, ante una innovación en las otras variables
+
+irf_2pcob=irf(var2, response ="precio_cobre_diff", n.ahead=8, boot=TRUE)
+irf_2pcob
+
+##Este modelo impulso respuesta nos muestra como responde el precio del cobre ante 
+#un impulso de las otras variables
+# Nos lo entrega, y luego la banda baja y la banda alta del modelo con un 95% conf
+
+plot(irf_2pcob)
+
+#Ahora el impulso respuesta del tipo de cambio real, frente a variaciones de las otras variables
+
+
+irf_2tcamr=irf(var2, response ="tcambio_real_diff", n.ahead=8, boot=TRUE)
+irf_2tcamr
+
+plot(irf_2tcamr)
+
+#Ahora el impulso respuesta de la TPM
+
+
+irf_2TPM=irf(var2, response ="tasa_TPM_diff", n.ahead=8, boot=TRUE)
+irf_2TPM
+
+plot(irf_2TPM)
+
+#Ahora el impulso respuesta del IPC frente a innovaciones en las otras variables
+
+
+irf_2IPC=irf(var2, response ="tasa_IPC_diff", n.ahead=8, boot=TRUE)
+irf_2IPC
+plot(irf_2IPC)
+
+
+#VAR 3 #### QUERIAMOS HACER UN VAR CON LA TPM SIN DIFERENCIAR, EL DICKEY FULLER
+##FUE DE 0,04, PERO AL INTENTARLO OBTENEMOS UN ERROR: NAs in y.
+
+ejvar3 <- cbind(tcambio_real_diff, precio_cobre_diff, tasa_TPM, tasa_IPC_diff, tipo_gob_diff, crisis_ec_diff)
+VARselect(ejvar3, lag.max = 12)
+
+#####
+
+#VAR 4 ##Se repite VAR1 pero con mas rezagos
+
+# VARSELECT indica orden 5
+ 
+var4 <- VAR(ejvar2, p=5)
+var4
+
+summary(var4)
+##Roots of the characteristic polynomial:
+## son todas menores a 1, podemos decir que se satisface la condición 
+#de estabilidad.
+
+#Lo graficamos
+plot(var4)
+
+###Haremos la prueba de autocorrelación serial en los residuales
+
+# H0: Los residuales no están correlacionados, -> p value > 0,05 Aceptar H0 -- No rechazar H0
+# H1: Los residuales si están correlacionados, -> p value < 0,05 Aceptar H1 -- Rechazar H0
+
+serialvar4 <- serial.test(var4, lags.pt = 1, type = "PT.asymptotic")
+serialvar4$serial
+#Obtenemos : Warning messages:
+#1: In pchisq(STATISTIC, df = PARAMETER) : NaNs produced
+#2: In pchisq(STATISTIC, df = PARAMETER) : NaNs produced
+
+#El test de premanteau dio:
+
+## p-value = NA
+
+###Procedemos a hacer la prueba de normaliad de los residuales
+
+## Nos vamos a fijar en los p value de la kurtosis y del sesgo (skewness)
+
+#H0: Los residuales se distribuyen normal   (pvalue > 0,05 -> Aceptamos H0)
+#H1: Los residuales no se distribuyen normal (pvalue < 0,05 -> Rechazamos H0)
+
+normvar4=normality.test(var4)
+normvar4$jb.mul
+
+#Sesgo -> p-value = 3.403e-09
+#kurtosis -> p-value < 2.2e-16
+
+##Se concluye que no hay normalidad, valores p < 0,05
+
+#Procedemos a realizar la prueba de homocedasticidad de la varianza de los residuales
+
+arch4 <- arch.test(var4, lags.multi = 5)
+
+## ME TIRÓ UN MONTON DE MENSAJES WARNING (9) DEL ESTILO: 
+
+#Warning messages:
+#1: In doTryCatch(return(expr), name, parentenv, handler) :
+# display list redraw incomplete   (ERAN TODOS IGUALES)
+
+
+#H0: La varianza de los residuales es constante (pvalue >  0,05) 
+#H1: La varianza de los residuales no es constante (pvalue < 0,05)
+
+arch4$arch.mul
+#p-value = 0.3149, esto quiere decir que la varianza de los residuales sí es constante
+##YIIIIEI
+
+####Modelo impulso respuesta
+
+# 1° Veremos el impulso respuesta del precio del cobre, ante una innovación en las otras variables
+
+irf_4pcob=irf(var4, response ="precio_cobre_diff", n.ahead=8, boot=TRUE)
+irf_4pcob
+
+##Este modelo impulso respuesta nos muestra como responde el precio del cobre ante 
+#un impulso de las otras variables
+# Nos lo entrega, y luego la banda baja y la banda alta del modelo con un 95% conf
+
+plot(irf_4pcob)
+
+#Ahora el impulso respuesta del tipo de cambio real, frente a variaciones de las otras variables
+
+
+irf_4tcamr=irf(var4, response ="tcambio_real_diff", n.ahead=8, boot=TRUE)
+irf_4tcamr
+
+plot(irf_4tcamr)
+
+#Ahora el impulso respuesta de la TPM
+
+
+irf_4TPM=irf(var4, response ="tasa_TPM_diff", n.ahead=8, boot=TRUE)
+irf_4TPM
+
+plot(irf_4TPM)
+
+#Ahora el impulso respuesta del IPC frente a innovaciones en las otras variables
+
+
+irf_4IPC=irf(var4, response ="tasa_IPC_diff", n.ahead=8, boot=TRUE)
+irf_4IPC
+plot(irf_2IPC)
+
+
+############ EL MODELO VAR (VAR REDUCIDO) NO TIENE EN CUENTA LA DEPENDENCIA ACTUAL, 
+# YA QUE TODAS SUS VARIABLES DEPENDEN DE SUS PROPIOS VALORES PASADOS Y DE 
+# LOS VALORES PASADOS DE LAS DEMÁS VARIABLES
+
+#### LA DEPENDENCIA ACTUAL ES UN COMPONENTE QUE SE AÑADE, EN LOS MODELOS SVAR
+## VECTORES AUTOREGRESIVOS ESTRUCTURALES (SVAR) ###
+# SVAR
 
