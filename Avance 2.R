@@ -33,13 +33,21 @@ plot(Base_datos.ts, main="Comportamiento de las variables")
 
 
 #Creo una base sin dummys solo para hacer un grafico bonito
-Base_datos_sin_dummys <- read_excel(ruta_excel,
-                         sheet = "Datossindummys")
+Base_graficada_1 <- read_excel(ruta_excel,
+                         sheet = "Base_graficada_1")
 
-Base_datos_sin_dummys = ts(Base_datos_sin_dummys, start = 1985, frequency = 4)
-Base_datos_sin_dummys
-plot(Base_datos_sin_dummys, main="Comportamiento de las variables")
+Base_graficada_1.ts= ts(Base_graficada_1, start = 1985, frequency = 4)
+Base_graficada_1.ts
+plot(Base_graficada_1.ts, main="Comportamiento de las variables")
 
+
+####Grafico con PIB de cada servicio en vez de valor añadido
+Base_graficada_2 <- read_excel(ruta_excel,
+                               sheet = "Base_graficada_2")
+
+Base_graficada_2= ts(Base_graficada_2, start = 1985, frequency = 4)
+Base_graficada_2
+plot(Base_graficada_2, main="Comportamiento de las variables")
 
 #Creo una base solo con las variables que hasta ahora he incluido en el VAR
 
@@ -57,15 +65,29 @@ tasa_captación = ts(Base_datos.ts[,4], start=1985, freq=4)
 tasa_captación
 tasa_colocación = ts(Base_datos.ts[,5], start=1985, freq=4)
 tasa_colocación
-tasa_IPC = ts(Base_datos.ts[,6], start=1985, freq=4)
-tasa_IPC
-tasa_IPC_acum = ts(Base_datos.ts[,7], start=1985, freq=4)
-tasa_IPC_acum
-precio_cobre = ts(Base_datos.ts[,8], start=1985, freq=4)
+IPC = ts(Base_datos.ts[,6], start=1985, freq=4)
+IPC
+IPC_acum = ts(Base_datos.ts[,7], start=1985, freq=4)
+IPC_acum
+tasa_desempleo = ts(Base_datos.ts[,8], start=1985, freq=4)
+tasa_desempleo
+precio_cobre = ts(Base_datos.ts[,9], start=1985, freq=4)
 precio_cobre
-tipo_gob =  ts(Base_datos.ts[,9], start=1985, freq=4)
+pib_manufacturas =  ts(Base_datos.ts[,10], start=1985, freq=4)
+pib_manufacturas
+pib_servicios =  ts(Base_datos.ts[,11], start=1985, freq=4)
+pib_servicios
+pib_minería =  ts(Base_datos.ts[,12], start=1985, freq=4)
+pib_minería
+VA_manufacturas =  ts(Base_datos.ts[,13], start=1985, freq=4)
+VA_manufacturas
+VA_servicios =  ts(Base_datos.ts[,14], start=1985, freq=4)
+VA_servicios
+VA_minería =  ts(Base_datos.ts[,15], start=1985, freq=4)
+VA_minería
+tipo_gob =  ts(Base_datos.ts[,16], start=1985, freq=4)
 tipo_gob
-crisis_ec =  ts(Base_datos.ts[,10], start=1985, freq=4)
+crisis_ec =  ts(Base_datos.ts[,17], start=1985, freq=4)
 crisis_ec
 #Graficos 
 plot(tcambio_real, ylab="Precio", xlab="Trimestres", main="Tipo de Cambio Real en Chile", col="blue")
@@ -73,14 +95,20 @@ plot(tcambio_dolarobs, ylab="Precio", xlab="Trimestres", main="Valor del dolar o
 plot(tasa_TPM, ylab="Tasa", xlab="Trimestres", main="TPM", col="blue")
 plot(tasa_captación, ylab="Tasa", xlab="Trimestres", main="Tasa de Captación", col="blue")
 plot(tasa_colocación, ylab="Tasa", xlab="Trimestres", main="Tasa de Colocación", col="blue")
-plot(tasa_IPC, ylab="Índice", xlab="Trimestres", main="IPC variación mensual", col="blue")
-plot(tasa_IPC_acum, ylab="Índice", xlab="Trimestres", main="IPC variación mismo periodo, año anterior", col="blue")
+plot(IPC, ylab="Índice", xlab="Trimestres", main="IPC variación mensual", col="blue")
+plot(IPC_acum, ylab="Índice", xlab="Trimestres", main="IPC variación mismo periodo, año anterior", col="blue")
+plot(tasa_desempleo, ylab="Tasa", xlab="Trimestres", main="Tasa de desempleo", col="blue")
 plot(precio_cobre, ylab="Precio", xlab="Trimestres", main="Precio del cobre en Chile", col="blue")
-
+plot(pib_manufacturas, ylab="PIB", xlab="Sector Manufacturas", col="blue")
+plot(pib_servicios, ylab="PIB", xlab="Sector Servicios", col="blue")
+plot(pib_minería, ylab="PIB", xlab="Sector Minería", col="blue")
+plot(VA_manufacturas, ylab="Porcentaje del PIB", xlab="Valor Añadido del Sector Manufacturas", col="blue")
+plot(VA_servicios, ylab="Porcentaje del PIB", xlab="Valor Añadido del Sector Servicios", col="blue")
+plot(VA_minería, ylab="Rentas Mineras como Porcentaje del PIB", xlab="Valor Añadido del Sector Minería", col="blue")
 
 ### Gráficos estacionales para el tipo de cambio real, la TPM, y el precio del cobre
 
-seasonplot(tcambio_real, col=rainbow(12), year.labels = TRUE, main = "Grafico Estacional - Tipo de Cambio Real")
+seasonplot(tcambio_dolarobs, col=rainbow(12), year.labels = TRUE, main = "Grafico Estacional - Tipo de Cambio Real")
 seasonplot(tasa_TPM, col=rainbow(12), year.labels = TRUE, main = "Grafico Estacional - TPM")
 seasonplot(precio_cobre, col=rainbow(12), year.labels = TRUE, main = "Grafico Estacional - Precio del Cobre")
 
@@ -91,10 +119,18 @@ acf(tcambio_dolarobs)
 acf(tasa_TPM)
 acf(tasa_captación)
 acf(tasa_colocación)
-acf(tasa_IPC)
-acf(tasa_IPC_acum)
+acf(IPC)
+acf(IPC_acum)
+acf(tasa_desempleo)
 acf(precio_cobre)
+acf(pib_manufacturas)
+acf(pib_servicios)
+acf(pib_minería)
+acf(VA_manufacturas)
+acf(VA_servicios)
+acf(VA_minería)
 acf(tipo_gob)
+acf(crisis_ec)
 
 ##Ninguna de las variables tiene estacionariedad
 
@@ -103,23 +139,37 @@ ndiffs(tcambio_dolarobs)
 ndiffs(tasa_TPM)
 ndiffs(tasa_captación)
 ndiffs(tasa_colocación)
-ndiffs(tasa_IPC)
-ndiffs(tasa_IPC_acum)
+ndiffs(IPC)
+ndiffs(IPC_acum)
+ndiffs(tasa_desempleo)
 ndiffs(precio_cobre)
+ndiffs(pib_manufacturas)
+ndiffs(pib_servicios)
+ndiffs(pib_minería)
+ndiffs(VA_manufacturas)
+ndiffs(VA_servicios)
+ndiffs(VA_minería)
 ndiffs(tipo_gob)
 ndiffs(crisis_ec)
 
-### Todas requieren solo de la primera diferencia, exepto la variable crisis (0)
-
+### RESULTADOS: LA MAYORÍA REQUIERE PRIMERA DIFERENCIA, EL PIB SERVICIOS
+#NECESITA 2, EL VALOR AÑADIDO EN MINERÍA NO NECESITA DIFERENCIA
 
 tcambio_real_diff=diff(tcambio_real)
 tcambio_dolarobs_diff=diff(tcambio_dolarobs)
 tasa_TPM_diff=diff(tasa_TPM)
 tasa_captación_diff=diff(tasa_captación)
 tasa_colocación_diff=diff(tasa_colocación)
-tasa_IPC_diff=diff(tasa_IPC)
-tasa_IPC_acum_diff=diff(tasa_IPC_acum)
+IPC_diff=diff(IPC)
+IPC_acum_diff=diff(IPC_acum)
+tasa_desempleo_diff=diff(tasa_desempleo)
 precio_cobre_diff=diff(precio_cobre)
+pib_manufacturas_diff=diff(pib_manufacturas)
+pib_servicios_diff=diff(pib_servicios)
+pib_minería_diff=diff(pib_minería)
+VA_manufacturas_diff=diff(VA_manufacturas)
+VA_servicios_diff=diff(VA_servicios)
+VA_minería_diff=diff(VA_minería)
 tipo_gob_diff=diff(tipo_gob)
 crisis_ec_diff=diff(crisis_ec)
 
@@ -127,14 +177,22 @@ crisis_ec_diff=diff(crisis_ec)
 
 #Graficos 
 
-plot(tcambio_real_diff, ylab="Precio", xlab="Trimestres", main="Tipo de Cambio Real en Chile", col="blue")
-plot(tcambio_dolarobs_diff, ylab="Precio", xlab="Trimestres", main="Valor del dolar observado en Chile", col="blue")
+plot(tcambio_real_diff, ylab="Precio", xlab="Trimestres", main="Tipo de Cambio Real", col="blue")
+plot(tcambio_dolarobs_diff, ylab="Precio", xlab="Trimestres", main="Dolar Observado", col="blue")
 plot(tasa_TPM_diff, ylab="Tasa", xlab="Trimestres", main="TPM", col="blue")
 plot(tasa_captación_diff, ylab="Tasa", xlab="Trimestres", main="Tasa de Captación", col="blue")
 plot(tasa_colocación_diff, ylab="Tasa", xlab="Trimestres", main="Tasa de Colocación", col="blue")
-plot(tasa_IPC_diff, ylab="Índice", xlab="Trimestres", main="IPC mensual", col="blue")
-plot(tasa_IPC_acum_diff, ylab="Índice", xlab="Trimestres", main="IPC variación año anterior", col="blue")
-plot(precio_cobre_diff, ylab="Precio", xlab="Trimestres", main="Precio del cobre en Chile", col="blue")
+plot(IPC_diff, ylab="Índice", xlab="Trimestres", main="IPC general", col="blue")
+plot(IPC_acum_diff, ylab="Índice", xlab="Trimestres", main="IPC variación año anterior", col="blue")
+plot(tasa_desempleo_diff, ylab="Tasa", xlab="Trimestres", main="Tasa de Desempleo", col="blue")
+plot(precio_cobre_diff, ylab="Precio", xlab="Trimestres", main="Precio del Cobre", col="blue")
+plot(pib_manufacturas_diff, ylab="PIB", xlab="Trimestres", main="Sector Manufacturero", col="blue")
+plot(pib_servicios_diff, ylab="PIB", xlab="Trimestres", main="Sector Servicios", col="blue")
+plot(pib_minería_diff, ylab="PIB", xlab="Trimestres", main="Sector Minero", col="blue")
+plot(VA_manufacturas_diff, ylab="Valor Añadido (% del PIB)", xlab="Trimestres", main="Sector Manufacturero", col="blue")
+plot(VA_servicios_diff, ylab="Valor Añadido (% del PIB)", xlab="Trimestres", main="Sector Servicios", col="blue")
+plot(VA_minería_diff, ylab="Valor Añadido (% del PIB)", xlab="Trimestres", main="Sector Minero", col="blue")
+
 
 ##Autocorrelaciones
 
