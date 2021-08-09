@@ -173,6 +173,11 @@ VA_minería_diff=diff(VA_minería)
 tipo_gob_diff=diff(tipo_gob)
 crisis_ec_diff=diff(crisis_ec)
 
+
+ndiffs(pib_servicios_diff)
+##Aún falta una diferencia
+pib_servicios_diff2=diff(pib_servicios_diff)
+
 #Graficamos
 
 #Graficos 
@@ -187,7 +192,8 @@ plot(IPC_acum_diff, ylab="Índice", xlab="Trimestres", main="IPC variación año
 plot(tasa_desempleo_diff, ylab="Tasa", xlab="Trimestres", main="Tasa de Desempleo", col="blue")
 plot(precio_cobre_diff, ylab="Precio", xlab="Trimestres", main="Precio del Cobre", col="blue")
 plot(pib_manufacturas_diff, ylab="PIB", xlab="Trimestres", main="Sector Manufacturero", col="blue")
-plot(pib_servicios_diff, ylab="PIB", xlab="Trimestres", main="Sector Servicios", col="blue")
+plot(pib_servicios_diff, ylab="PIB", xlab="Trimestres", main="Sector Servicios (1dif)", col="blue")
+plot(pib_servicios_diff2, ylab="PIB", xlab="Trimestres", main="Sector Servicios (2dif)", col="blue")
 plot(pib_minería_diff, ylab="PIB", xlab="Trimestres", main="Sector Minero", col="blue")
 plot(VA_manufacturas_diff, ylab="Valor Añadido (% del PIB)", xlab="Trimestres", main="Sector Manufacturero", col="blue")
 plot(VA_servicios_diff, ylab="Valor Añadido (% del PIB)", xlab="Trimestres", main="Sector Servicios", col="blue")
@@ -201,23 +207,31 @@ acf(tcambio_dolarobs_diff)
 acf(tasa_TPM_diff)
 acf(tasa_captación_diff)
 acf(tasa_colocación_diff)
-acf(tasa_IPC_diff)
-acf(tasa_IPC_acum_diff)
+acf(IPC_diff)
+acf(IPC_acum_diff)
+acf(tasa_desempleo_diff)
 acf(precio_cobre_diff)
+acf(pib_manufacturas_diff)
+acf(pib_servicios_diff)
+acf(pib_servicios_diff2)
+acf(pib_minería_diff)
+acf(VA_manufacturas_diff)
+acf(VA_servicios_diff)
+acf(VA_minería_diff)
 
 #Comparaciones 
 
 par(mfrow=c(2,2), mar=c(4,4,4,1) + .1)
 
-plot(tcambio_real, ylab="tcambio_real", xlab="Tiempo")
-acf(tcambio_real, main="Serie no Estacionaria")
-plot(tcambio_real_diff, ylab="Tipo de Cambio Real", xlab="Tiempo")
-acf(tcambio_real_diff, main="Serie Estacionaria")
+plot(tcambio_dolarobs, ylab="Dolar Observado", xlab="Tiempo")
+acf(tcambio_dolarobs, main="Serie no Estacionaria")
+plot(tcambio_dolarobs_diff, ylab="D.O", xlab="Tiempo")
+acf(tcambio_dolarobs_diff, main="Serie Estacionaria")
 
-plot(tasa_TPM, ylab="TPM", xlab="Tiempo")
-acf(tasa_TPM, main="Serie no Estacionaria")
-plot(tasa_TPM_diff, ylab="Tasa de Política Monetaria", xlab="Tiempo")
-acf(tasa_TPM_diff, main="Serie Estacionaria")
+plot(IPC, ylab="IPC", xlab="Tiempo")
+acf(IPC, main="Serie no Estacionaria")
+plot(IPC_diff, ylab="Tasa de Política Monetaria", xlab="Tiempo")
+acf(IPC_diff, main="Serie Estacionaria")
 
 plot(precio_cobre, ylab="Precio", xlab="Tiempo")
 acf(precio_cobre, main="Serie no Estacionaria")
@@ -229,27 +243,39 @@ acf(precio_cobre_diff, main="Serie Estacionaria")
 adf.test(tcambio_real, alternative = "stationary")
 #p-value = 0.6533
 adf.test(tcambio_dolarobs, alternative = "stationary")
-#p-value = 0.5357
+#p-value = 0.5356
 adf.test(tasa_TPM, alternative = "stationary")
-#p-value = 0.04151
+#p-value = 0.07394
 adf.test(tasa_captación, alternative = "stationary")
 # p-value = 0.09471
 adf.test(tasa_colocación, alternative = "stationary")
 #p-value = 0.07162
-adf.test(tasa_IPC, alternative = "stationary")
+adf.test(IPC, alternative = "stationary")
 #p-value = 0.2413
-adf.test(tasa_IPC_acum, alternative = "stationary")
+adf.test(IPC_acum, alternative = "stationary")
 #p-value = 0.61111
+adf.test(tasa_desempleo, alternative = "stationary")
+#p-value = 0.3831
 adf.test(precio_cobre, alternative = "stationary")
 #p-value = 0.5098
+adf.test(pib_manufacturas, alternative = "stationary")
+#p-value = 0.6332
+adf.test(pib_servicios, alternative = "stationary")
+#p-value = 0.9124
+adf.test(pib_minería, alternative = "stationary")
+#p-value = 0.3102
+adf.test(VA_manufacturas, alternative = "stationary")
+#p-value = 0.5559
+adf.test(VA_servicios, alternative = "stationary")
+#p-value = 0.3611
+adf.test(VA_minería, alternative = "stationary")
+#p-value = 0.5581
 adf.test(tipo_gob, alternative = "stationary")
 #p-value = 0.422
 adf.test(crisis_ec, alternative = "stationary")
 #p-value = 0,25584
 
-#Para todas las variables se obtuvieron p values > 0,05 a exepción de la TPM
-#Esto es raro ya que indica estacionarieda, pero ndiffs me sugiere que se necesita
-#una diferencia
+#Para todas las variables se obtuvieron p values > 0,05 
 
 adf.test(tcambio_real_diff, alternative = "stationary")
 #p-value = 0.01
@@ -261,11 +287,25 @@ adf.test(tasa_captación_diff, alternative = "stationary")
 # p-value = 0.01
 adf.test(tasa_colocación_diff, alternative = "stationary")
 #p-value = 0.01
-adf.test(tasa_IPC_diff, alternative = "stationary")
+adf.test(IPC_diff, alternative = "stationary")
 #p-value = 0.01
-adf.test(tasa_IPC_acum_diff, alternative = "stationary")
+adf.test(IPC_acum_diff, alternative = "stationary")
+#p-value = 0.01
+adf.test(tasa_desempleo_diff, alternative = "stationary")
 #p-value = 0.01
 adf.test(precio_cobre_diff, alternative = "stationary")
+#p-value = 0.01
+adf.test(pib_manufacturas_diff, alternative = "stationary")
+#p-value = 0.01
+adf.test(pib_servicios_diff, alternative = "stationary")
+#p-value = 0.01
+adf.test(pib_minería_diff, alternative = "stationary")
+#p-value = 0.01
+adf.test(VA_manufacturas_diff, alternative = "stationary")
+#p-value = 0.08597
+adf.test(VA_servicios_diff, alternative = "stationary")
+#p-value = 0.01
+adf.test(VA_minería_diff, alternative = "stationary")
 #p-value = 0.01
 adf.test(tipo_gob_diff, alternative = "stationary")
 #p-value = 0.01
@@ -273,7 +313,14 @@ adf.test(crisis_ec_diff, alternative = "stationary")
 #p-value = 0.01
 
 ##Todas las variables (diferencias) arrojan pvalue < 0,05
-#esto indica que ahora son todas estacionarias
+#Excepto Valor añadido de manufacturas (curioso, ya que NDIF pronosticaba
+#que pib_servicios necesitaría 2 diff, necesitó solo 1, pero VA_manufacturas
+#2)
+#Se realiza segunda diff
+VA_manufacturas_diff2=diff(VA_manufacturas_diff)
+
+adf.test(VA_manufacturas_diff2, alternative = "stationary")
+#p-value = 0.01
 
 #Funciones de autocorrelacion y autocorrelación Parcial
 
@@ -294,22 +341,46 @@ pacf(tasa_captación_diff, main="Función de Auto Correlación Parcial")
 acf(tasa_colocación_diff, main="Tasa de Colocación - Función de Auto Correlación")
 pacf(tasa_colocación_diff, main="Función de Auto Correlación Parcial")
 
-acf(tasa_IPC_diff, main="IPC mensual - Función de Auto Correlación")
-pacf(tasa_IPC_diff, main="Función de Auto Correlación Parcial")
+acf(IPC_diff, main="IPC mensual - Función de Auto Correlación")
+pacf(IPC_diff, main="Función de Auto Correlación Parcial")
 
-acf(tasa_IPC_acum_diff, main="IPC variación anual - Función de Auto Correlación")
-pacf(tasa_IPC_acum_diff, main="Función de Auto Correlación Parcial")
+acf(IPC_acum_diff, main="IPC variación anual - Función de Auto Correlación")
+pacf(IPC_acum_diff, main="Función de Auto Correlación Parcial")
+
+acf(tasa_desempleo_diff, main="Tasa de Desempleo - Función de Auto Correlación")
+pacf(tasa_desempleo_diff, main="Función de Auto Correlación Parcial")
 
 acf(precio_cobre_diff, main="Precio del Cobre - Función de Auto Correlación")
 pacf(precio_cobre_diff, main="Función de Auto Correlación Parcial")
+
+acf(pib_manufacturas_diff, main="PIB manufacturero - Función de Auto Correlación")
+pacf(pib_manufacturas_diff, main="Función de Auto Correlación Parcial")
+
+acf(pib_servicios_diff, main="PIB servicios - Función de Auto Correlación")
+pacf(pib_servicios_diff, main="Función de Auto Correlación Parcial")
+
+acf(pib_minería_diff, main="PIB minería - Función de Auto Correlación")
+pacf(pib_minería_diff, main="Función de Auto Correlación Parcial")
+
+acf(VA_manufacturas_diff, main="Valor Añadido Manufacturas - Función de Auto Correlación")
+pacf(VA_manufacturas_diff, main="Función de Auto Correlación Parcial")
+
+acf(VA_manufacturas_diff2, main="Valor Añadido Manufacturas - Función de Auto Correlación")
+pacf(VA_manufacturas_diff2, main="Función de Auto Correlación Parcial")
+
+acf(VA_servicios_diff, main="Valor Añadido Servicios - Función de Auto Correlación")
+pacf(VA_servicios_diff, main="Función de Auto Correlación Parcial")
+
+acf(VA_minería_diff, main="Valor Añadido Minería - Función de Auto Correlación")
+pacf(VA_minería_diff, main="Función de Auto Correlación Parcial")
 
 #La función de autocorrelación nos dice el número de medias moviles
 #La función de autocorrelación parcial nos dice el número de autoregresivos,
 
 #Para que el rezago coincida con las frecuencias, le damos la sig instrucción
 
-acf(ts(precio_cobre_diff, frequency=1))
-pacf(ts(precio_cobre_diff, frequency=1))
+#acf(ts(precio_cobre_diff, frequency=1))
+#pacf(ts(precio_cobre_diff, frequency=1))
 
 #Para graficar
 par(mfrow=c(1,1), mar=c(4,4,4,1) + .1)
@@ -320,35 +391,34 @@ ts.plot(precio_cobre_diff, tcambio_real_diff, tasa_TPM_diff, tasa_captación_dif
 #poseen valores muy altos, usaré logaritmos
 
 
-logtcambio_real <- log(tcambio_real)
-logtcambio_dolarobs <- log(tcambio_dolarobs)
-logtasa_TPM <- log(tasa_TPM)
-logtasa_captación <- log(tasa_captación)
-logtasa_colocación <- log(tasa_colocación)
-logtasa_IPC <- log(tasa_IPC)
-logtasa_IPC_acum <- log(tasa_IPC_acum)
-logprecio_cobre <- log(precio_cobre)
+#logtcambio_real <- log(tcambio_real)
+#logtcambio_dolarobs <- log(tcambio_dolarobs)
+#logtasa_TPM <- log(tasa_TPM)
+#logtasa_captación <- log(tasa_captación)
+#logtasa_colocación <- log(tasa_colocación)
+#logIPC <- log(tasa_IPC)
+#logIPC_acum <- log(tasa_IPC_acum)
+#logprecio_cobre <- log(precio_cobre)
 
 # Warning message:
 #   In log(tasa_IPC) : NaNs produced
 
-log_tcambio_real_diff=diff(logtcambio_real)
-log_tcambio_dolarobs_diff=diff(logtcambio_dolarobs)
-log_tasa_TPM_diff=diff(logtasa_TPM)
-log_tasa_captación_diff=diff(logtasa_captación)
-log_tasa_colocación_diff=diff(logtasa_colocación)
-log_tasa_IPC_diff=diff(logtasa_IPC)
-log_tasa_IPC_acum_diff=diff(logtasa_IPC_acum)
-log_precio_cobre_diff=diff(logprecio_cobre) 
-
+#log_tcambio_real_diff=diff(logtcambio_real)
+#log_tcambio_dolarobs_diff=diff(logtcambio_dolarobs)
+#log_tasa_TPM_diff=diff(logtasa_TPM)
+#log_tasa_captación_diff=diff(logtasa_captación)
+#log_tasa_colocación_diff=diff(logtasa_colocación)
+#log_tasa_IPC_diff=diff(logtasa_IPC)
+#log_tasa_IPC_acum_diff=diff(logtasa_IPC_acum)
+#log_precio_cobre_diff=diff(logprecio_cobre) 
 
 
 #Segundo intento
 
-ts.plot(precio_cobre_diff, log_tcambio_real_diff, tasa_TPM_diff, tasa_captación_diff, tasa_colocación_diff, tasa_IPC_diff, tasa_IPC_acum_diff, log_tcambio_dolarobs_diff, col=c( "blue", "red", "orange", "yellow", "green", "pink", "black", "brown"))
+#ts.plot(precio_cobre_diff, log_tcambio_real_diff, tasa_TPM_diff, tasa_captación_diff, tasa_colocación_diff, tasa_IPC_diff, tasa_IPC_acum_diff, log_tcambio_dolarobs_diff, col=c( "blue", "red", "orange", "yellow", "green", "pink", "black", "brown"))
 
 #Se usan Logaritmos
-ts.plot(log_precio_cobre_diff, log_tcambio_real_diff, log_tasa_TPM_diff, log_tasa_captación_diff, log_tasa_colocación_diff, log_tasa_IPC_diff, log_tasa_IPC_acum_diff, log_tcambio_dolarobs_diff, col=c( "blue", "red", "orange", "yellow", "green", "pink", "black", "brown"))
+#ts.plot(log_precio_cobre_diff, log_tcambio_real_diff, log_tasa_TPM_diff, log_tasa_captación_diff, log_tasa_colocación_diff, log_tasa_IPC_diff, log_tasa_IPC_acum_diff, log_tcambio_dolarobs_diff, col=c( "blue", "red", "orange", "yellow", "green", "pink", "black", "brown"))
 
 # El grafico se ve mejor
 
@@ -358,7 +428,7 @@ ts.plot(log_precio_cobre_diff, log_tcambio_real_diff, log_tasa_TPM_diff, log_tas
 # H0: El precio del cobre no es causado en el sentido de granger por el  tipo de cambio real > 0,05
 # H1: El precio del cobre sí es causado en el sentido de granger por el  tipo de cambio real < 0,05
 
-grangertest(log_precio_cobre_diff~log_tcambio_real_diff, order = 1)
+#grangertest(log_precio_cobre_diff~log_tcambio_real_diff, order = 1)
 grangertest(precio_cobre_diff~tcambio_real_diff, order = 1)
 # Con la prueba de primer orden nos da 0.005668 **, < 0,05
 # (al usar las variables sin log da 0.007238 **)
@@ -370,7 +440,7 @@ grangertest(precio_cobre_diff~tcambio_real_diff, order = 1)
 # H0: El tipo de cambio real no es causado en el sentido de granger por el  precio del cobre > 0,05
 # H1: El tipo de cambio real sí es causado en el sentido de granger por el  precio del cobre < 0,05
 
-grangertest(log_tcambio_real_diff~log_precio_cobre_diff, order = 1)
+#grangertest(log_tcambio_real_diff~log_precio_cobre_diff, order = 1)
 grangertest(tcambio_real_diff~precio_cobre_diff, order = 1)
 
 #En este sentido nos da 0.03073 * < 0,05 (al usar las variables sin log da 0.01681 *), 
@@ -383,137 +453,161 @@ grangertest(tcambio_real_diff~precio_cobre_diff, order = 1)
 # H1: El tipo de cambio real sí es causado en el sentido de granger por la TPM < 0,05
 
 
-grangertest(log_tcambio_real_diff~log_tasa_TPM_diff, order = 1)
+#grangertest(log_tcambio_real_diff~log_tasa_TPM_diff, order = 1)
 grangertest(tcambio_real_diff~tasa_TPM_diff, order = 1)
 #Se obtuvo  0.7623 > 0,05, por lo que se acepta la hipotesis nula, no hay causalidad
-#0.5273 sin log
+# 0.6638 sin log
 
 #Se hace la prueba de segundo orden
-grangertest(log_tcambio_real_diff~log_tasa_TPM_diff, order = 2)
+#grangertest(log_tcambio_real_diff~log_tasa_TPM_diff, order = 2)
 grangertest(tcambio_real_diff~tasa_TPM_diff, order = 2)
 #Se obtiene 0,9 (0,8 sin log), se procede a probar con tercer orden
-grangertest(log_tcambio_real_diff~log_tasa_TPM_diff, order = 3)
+#grangertest(log_tcambio_real_diff~log_tasa_TPM_diff, order = 3)
 grangertest(tcambio_real_diff~tasa_TPM_diff, order = 3)
 #Da 0,6, 0,3 sin log
-grangertest(log_tcambio_real_diff~log_tasa_TPM_diff, order = 4)
+#grangertest(log_tcambio_real_diff~log_tasa_TPM_diff, order = 4)
 grangertest(tcambio_real_diff~tasa_TPM_diff, order = 4)
 #0.7, 0.4
-grangertest(log_tcambio_real_diff~log_tasa_TPM_diff, order = 5)
+#grangertest(log_tcambio_real_diff~log_tasa_TPM_diff, order = 5)
 grangertest(tcambio_real_diff~tasa_TPM_diff, order = 5)
 #0.7, 0.4
-grangertest(log_tcambio_real_diff~log_tasa_TPM_diff, order = 6)
+#grangertest(log_tcambio_real_diff~log_tasa_TPM_diff, order = 6)
 grangertest(tcambio_real_diff~tasa_TPM_diff, order = 6)
 #0.6, 0.3
-grangertest(log_tcambio_real_diff~log_tasa_TPM_diff, order = 7)
+#grangertest(log_tcambio_real_diff~log_tasa_TPM_diff, order = 7)
 grangertest(tcambio_real_diff~tasa_TPM_diff, order = 7)
 #0.43, 0.18
-grangertest(log_tcambio_real_diff~log_tasa_TPM_diff, order = 8)
+#grangertest(log_tcambio_real_diff~log_tasa_TPM_diff, order = 8)
 grangertest(tcambio_real_diff~tasa_TPM_diff, order = 8)
 #0.4, 0.12
-grangertest(log_tcambio_real_diff~log_tasa_TPM_diff, order = 9)
+#grangertest(log_tcambio_real_diff~log_tasa_TPM_diff, order = 9)
 grangertest(tcambio_real_diff~tasa_TPM_diff, order = 9)
 #0.46, 0.14
-grangertest(log_tcambio_real_diff~log_tasa_TPM_diff, order = 10)
+#grangertest(log_tcambio_real_diff~log_tasa_TPM_diff, order = 10)
 grangertest(tcambio_real_diff~tasa_TPM_diff, order = 10)
 #0.51, 0.19
-grangertest(log_tcambio_real_diff~log_tasa_TPM_diff, order = 11)
+#grangertest(log_tcambio_real_diff~log_tasa_TPM_diff, order = 11)
 grangertest(tcambio_real_diff~tasa_TPM_diff, order = 11)
-#0.52, 0.19
-grangertest(log_tcambio_real_diff~log_tasa_TPM_diff, order = 12)
+#0.52, 0.05483
+#grangertest(log_tcambio_real_diff~log_tasa_TPM_diff, order = 12)
 grangertest(tcambio_real_diff~tasa_TPM_diff, order = 12)
-#0.44, 0.12
+#0.44, 0.04879
+
+# H0:La TPM no es causada en el sentido de granger por el tipo de cambio real > 0,05
+# H1: El tipo de cambio real sí es causado en el sentido de granger por la TPM < 0,05
+
+#grangertest(log_tasa_TPM_diff~log_tcambio_real_diff, order = 1)
+grangertest(tasa_TPM_diff~tcambio_real_diff, order = 1)
+#0.742
+#grangertest(log_tasa_TPM_diff~log_tcambio_real_diff, order = 2)
+grangertest(tasa_TPM_diff~tcambio_real_diff, order = 2)
+#0.0228*
+
+### Se encuentra causalidad desde el tipo de cambio real a la tpm 
+# a partir del 2° rezago
 
 
 ###Prueba de granger con las dummy
+
+# H0: El tipo de cambio real no es causado en el sentido de granger por el tipo de gobierno > 0,05
+# H1: El tipo de cambio real sí es causado en el sentido de granger por el tipo de gobierno < 0,05
+
+
 grangertest(tcambio_real_diff~tipo_gob_diff, order = 1)
 grangertest(tcambio_real_diff~tipo_gob_diff, order = 2)
 grangertest(tcambio_real_diff~tipo_gob_diff, order = 3)
 grangertest(tcambio_real_diff~tipo_gob_diff, order = 4)
 grangertest(tcambio_real_diff~tipo_gob_diff, order = 5)
 grangertest(tcambio_real_diff~tipo_gob_diff, order = 6)
+grangertest(tcambio_real_diff~tipo_gob_diff, order = 7)
+grangertest(tcambio_real_diff~tipo_gob_diff, order = 8)
+grangertest(tcambio_real_diff~tipo_gob_diff, order = 9)
+#0.04816 *
 
-#Se puede concluir que no hay causalidad para ningun rezago 
 
-# H0:La TPM no es causada en el sentido de granger por el tipo de cambio real > 0,05
-# H1: El tipo de cambio real sí es causado en el sentido de granger por la TPM < 0,05
+#Se puede concluir que hay causalidad para el 9° rezago
 
-grangertest(log_tasa_TPM_diff~log_tcambio_real_diff, order = 1)
-grangertest(tasa_TPM_diff~tcambio_real_diff, order = 1)
-#0.21, 0.49
-grangertest(log_tasa_TPM_diff~log_tcambio_real_diff, order = 2)
-grangertest(tasa_TPM_diff~tcambio_real_diff, order = 2)
-#0.053, 0.06
-grangertest(log_tasa_TPM_diff~log_tcambio_real_diff, order = 3)
-grangertest(tasa_TPM_diff~tcambio_real_diff, order = 3)
-#0.01036 *, 0.02614 *
+# H0: El tipo de gobierno no es causado en el sentido de granger por el TCR > 0,05
+# H1: El tipo de gobierno sí es causado en el sentido de granger por EL TCR < 0,05
 
-### Se encuentra causalidad desde el tipo de cambio real a la tpm 
-# a partir del tercer rezago
+grangertest(tipo_gob_diff~tcambio_real_diff, order = 1)
+grangertest(tipo_gob_diff~tcambio_real_diff, order = 2)
+grangertest(tipo_gob_diff~tcambio_real_diff, order = 3)
+grangertest(tipo_gob_diff~tcambio_real_diff, order = 4)
+grangertest(tipo_gob_diff~tcambio_real_diff, order = 5)
+grangertest(tipo_gob_diff~tcambio_real_diff, order = 6)
+grangertest(tipo_gob_diff~tcambio_real_diff, order = 7)
+grangertest(tipo_gob_diff~tcambio_real_diff, order = 8)
+grangertest(tipo_gob_diff~tcambio_real_diff, order = 9)
+grangertest(tipo_gob_diff~tcambio_real_diff, order = 10)
+grangertest(tipo_gob_diff~tcambio_real_diff, order = 11)
+grangertest(tipo_gob_diff~tcambio_real_diff, order = 12)
+
+## No hay causalidad
+
 
 # H0: El precio del cobre no es causado en el sentido de granger por la TPM > 0,05
 # H1: El precio del cobre real sí es causado en el sentido de granger por la TPM < 0,05
 
-grangertest(log_precio_cobre_diff~log_tasa_TPM_diff, order = 1)
+#grangertest(log_precio_cobre_diff~log_tasa_TPM_diff, order = 1)
 grangertest(precio_cobre_diff~tasa_TPM_diff, order = 1)
 
-## 0.2699, 0.04484 *
+#0.06063 *
 
 #grangertest(log_precio_cobre_diff~log_tasa_TPM_diff, order = 2)
-#grangertest(precio_cobre_diff~tasa_TPM_diff, order = 2)
-#0.6, 0.3
+grangertest(precio_cobre_diff~tasa_TPM_diff, order = 2)
+#0.375
 
 #grangertest(log_precio_cobre_diff~log_tasa_TPM_diff, order = 3)
-#grangertest(precio_cobre_diff~tasa_TPM_diff, order = 3)
-#0.4, 0.5
+grangertest(precio_cobre_diff~tasa_TPM_diff, order = 3)
+#0.51
 
 #grangertest(log_precio_cobre_diff~log_tasa_TPM_diff, order = 4)
-#grangertest(precio_cobre_diff~tasa_TPM_diff, order = 4)
+grangertest(precio_cobre_diff~tasa_TPM_diff, order = 4)
 #0.7, 0.5
 
 #grangertest(log_precio_cobre_diff~log_tasa_TPM_diff, order = 5)
-#grangertest(precio_cobre_diff~tasa_TPM_diff, order = 5)
+grangertest(precio_cobre_diff~tasa_TPM_diff, order = 5)
 #0.8, 0.8
 #grangertest(log_precio_cobre_diff~log_tasa_TPM_diff, order = 6)
-#grangertest(precio_cobre_diff~tasa_TPM_diff, order = 6)
-#0.8, 0.6
+grangertest(precio_cobre_diff~tasa_TPM_diff, order = 6)
+#0.8, 0.5
 #grangertest(log_precio_cobre_diff~log_tasa_TPM_diff, order = 7)
-#grangertest(precio_cobre_diff~tasa_TPM_diff, order = 7)
-#0.8, 0.3
+grangertest(precio_cobre_diff~tasa_TPM_diff, order = 7)
+#0.8, 0.21
 #grangertest(log_precio_cobre_diff~log_tasa_TPM_diff, order = 8)
-#grangertest(precio_cobre_diff~tasa_TPM_diff, order = 8)
-#0.9, 0.7 
+grangertest(precio_cobre_diff~tasa_TPM_diff, order = 8)
+#0.9, 0.59 
 #grangertest(log_precio_cobre_diff~log_tasa_TPM_diff, order = 9)
-#grangertest(precio_cobre_diff~tasa_TPM_diff, order = 9)
-#0.9, 0.7
+grangertest(precio_cobre_diff~tasa_TPM_diff, order = 9)
+#0.9, 0.65
 #grangertest(log_precio_cobre_diff~log_tasa_TPM_diff, order = 10)
-#grangertest(precio_cobre_diff~tasa_TPM_diff, order = 10)
+grangertest(precio_cobre_diff~tasa_TPM_diff, order = 10)
 #0.8, 0.7
 #grangertest(log_precio_cobre_diff~log_tasa_TPM_diff, order = 11)
-#grangertest(precio_cobre_diff~tasa_TPM_diff, order = 11)
-#0.5, 0.5
+grangertest(precio_cobre_diff~tasa_TPM_diff, order = 11)
+#0.5, 0.63
 #grangertest(log_precio_cobre_diff~log_tasa_TPM_diff, order = 12)
-#grangertest(precio_cobre_diff~tasa_TPM_diff, order = 12)
-#0.6, 0.6
+grangertest(precio_cobre_diff~tasa_TPM_diff, order = 12)
+#0.6, 0.6137
 
-# Se encuentra evidencia para causalidad desde la TPM al precio del cobre
+# No se encuentra evidencia para causalidad desde la TPM al precio del cobre
 
 # H0: La TPM no es causada en el sentido de granger por el precio del cobre > 0,05
 # H1: La TPM sí es causada en el sentido de granger por el precio del cobre < 0,05
 
-grangertest(log_tasa_TPM_diff~log_precio_cobre_diff, order = 1)
+#grangertest(log_tasa_TPM_diff~log_precio_cobre_diff, order = 1)
 grangertest(tasa_TPM_diff~precio_cobre_diff, order = 1)
-#0.3063, 0.0002759 ***
-grangertest(log_tasa_TPM_diff~log_precio_cobre_diff, order = 2)
-##0,0004332 ***
+# 0.001377 **
 
 #Se encuentra evidencia de causalidad desde el precio del cobre al TPM (segundo orden)
 
 # H0: La TPM no es causada en el sentido de granger por el IPC > 0,05
 # H1: La TPM sí es causada en el sentido de granger por el IPC < 0,05
 
-grangertest(tasa_TPM_diff~tasa_IPC_diff, order = 1)
+grangertest(tasa_TPM_diff~IPC_diff, order = 1)
 ##Se genera un error al sacar logaritmo del IPC, se usan ambas variable sin log
-#Entrega un resultado de 0.02035 *, por lo que se rechaza la hip nula
+#Entrega un resultado de 0.03232 *, por lo que se rechaza la hip nula
 
 #Sí hay causalidad desde el IPC a la TPM (Tiene sentido puesto que la TPM se hace
 #justamente para controlar la inflación medida en el IPC)
@@ -521,29 +615,29 @@ grangertest(tasa_TPM_diff~tasa_IPC_diff, order = 1)
 # H0: El IPC no es causado en el sentido de granger por la TPM > 0,05
 # H1: El IPC sí es causado en el sentido de granger por el TPM < 0,05
 
-grangertest(tasa_IPC_diff~tasa_TPM_diff, order = 1)
+grangertest(IPC_diff~tasa_TPM_diff, order = 1)
 # 0,3
-grangertest(tasa_IPC_diff~tasa_TPM_diff, order = 2)
+grangertest(IPC_diff~tasa_TPM_diff, order = 2)
 # 0,9
-grangertest(tasa_IPC_diff~tasa_TPM_diff, order = 3)
+grangertest(IPC_diff~tasa_TPM_diff, order = 3)
 # 0,4
-grangertest(tasa_IPC_diff~tasa_TPM_diff, order = 4)
+grangertest(IPC_diff~tasa_TPM_diff, order = 4)
 # 0,5
-grangertest(tasa_IPC_diff~tasa_TPM_diff, order = 5)
+grangertest(IPC_diff~tasa_TPM_diff, order = 5)
 # 0,3
-grangertest(tasa_IPC_diff~tasa_TPM_diff, order = 6)
+grangertest(IPC_diff~tasa_TPM_diff, order = 6)
 # 0,2
-grangertest(tasa_IPC_diff~tasa_TPM_diff, order = 7)
+grangertest(IPC_diff~tasa_TPM_diff, order = 7)
 # 0,2
-grangertest(tasa_IPC_diff~tasa_TPM_diff, order = 8)
+grangertest(IPC_diff~tasa_TPM_diff, order = 8)
 # 0,2
-grangertest(tasa_IPC_diff~tasa_TPM_diff, order = 9)
+grangertest(IPC_diff~tasa_TPM_diff, order = 9)
 # 0,4
-grangertest(tasa_IPC_diff~tasa_TPM_diff, order = 10)
+grangertest(IPC_diff~tasa_TPM_diff, order = 10)
 # 0,4
-grangertest(tasa_IPC_diff~tasa_TPM_diff, order = 11)
+grangertest(IPC_diff~tasa_TPM_diff, order = 11)
 # 0,2
-grangertest(tasa_IPC_diff~tasa_TPM_diff, order = 12)
+grangertest(IPC_diff~tasa_TPM_diff, order = 12)
 # 0,2
 
 ## Se concluye que no hay causalidad desde la tasa TPM al IPC (por qué lo habría jaja)
@@ -551,7 +645,7 @@ grangertest(tasa_IPC_diff~tasa_TPM_diff, order = 12)
 # H0: El IPC no es causado en el sentido de granger por el tipo de cambio real > 0,05
 # H1: El IPC sí es causado en el sentido de granger por el tipo de cambio real < 0,05
 
-grangertest(tasa_IPC_diff~tcambio_real_diff, order = 1)
+grangertest(IPC_diff~tcambio_real_diff, order = 1)
 #0.002833 **
 
 #si hay causalidad
@@ -559,7 +653,7 @@ grangertest(tasa_IPC_diff~tcambio_real_diff, order = 1)
 # H0: El tipo de cambio real no es causado en el sentido de granger por el IPC > 0,05
 # H1: El tipo de cambio real sí es causado en el sentido de granger por el IPC < 0,05
 
-grangertest(tcambio_real_diff~tasa_IPC_diff, order = 1)
+grangertest(tcambio_real_diff~IPC_diff, order = 1)
 #0.0237 *
 
 ##Si hay causalidad
@@ -567,63 +661,112 @@ grangertest(tcambio_real_diff~tasa_IPC_diff, order = 1)
 # H0: El IPC no es causado en el sentido de granger por el Precio del cobre > 0,05
 # H1: El IPC sí es causado en el sentido de granger por el Precio del cobre < 0,05
 
-grangertest(tasa_IPC_diff~precio_cobre_diff, order = 1)
+grangertest(IPC_diff~precio_cobre_diff, order = 1)
 # 0.1909
-grangertest(tasa_IPC_diff~precio_cobre_diff, order = 2)
+grangertest(IPC_diff~precio_cobre_diff, order = 2)
 #0.09217 .
-grangertest(tasa_IPC_diff~precio_cobre_diff, order = 3)
+grangertest(IPC_diff~precio_cobre_diff, order = 3)
 #0.2789
-grangertest(tasa_IPC_diff~precio_cobre_diff, order = 4)
+grangertest(IPC_diff~precio_cobre_diff, order = 4)
 #0.0797 .
-grangertest(tasa_IPC_diff~precio_cobre_diff, order = 5)
+grangertest(IPC_diff~precio_cobre_diff, order = 5)
 #0.1086
-grangertest(tasa_IPC_diff~precio_cobre_diff, order = 6)
+grangertest(IPC_diff~precio_cobre_diff, order = 6)
 #0.1504
-grangertest(tasa_IPC_diff~precio_cobre_diff, order = 7)
+grangertest(IPC_diff~precio_cobre_diff, order = 7)
 #0.1155
-grangertest(tasa_IPC_diff~precio_cobre_diff, order = 8)
+grangertest(IPC_diff~precio_cobre_diff, order = 8)
 #0.1796
-grangertest(tasa_IPC_diff~precio_cobre_diff, order = 9)
+grangertest(IPC_diff~precio_cobre_diff, order = 9)
 #0.2357
-grangertest(tasa_IPC_diff~precio_cobre_diff, order = 10)
+grangertest(IPC_diff~precio_cobre_diff, order = 10)
 #0.2476
-grangertest(tasa_IPC_diff~precio_cobre_diff, order = 11)
+grangertest(IPC_diff~precio_cobre_diff, order = 11)
 #0.2595
-grangertest(tasa_IPC_diff~precio_cobre_diff, order = 12)
+grangertest(IPC_diff~precio_cobre_diff, order = 12)
 #0.1792
 
-## No hay causalidad de granger 
+## No hay causalidad de granger desde el precio del cobre hacia el IPC
 
 
 # H0: El precio del cobre no es causado en el sentido de granger por el IPC > 0,05
 # H1: El precio del cobre sí es causado en el sentido de granger por el IPC < 0,05
 
-grangertest(precio_cobre_diff~tasa_IPC_diff, order = 1)
+grangertest(precio_cobre_diff~IPC_diff, order = 1)
 #0.3942
-grangertest(precio_cobre_diff~tasa_IPC_diff, order = 2)
+grangertest(precio_cobre_diff~IPC_diff, order = 2)
 #0.05366 .
-grangertest(precio_cobre_diff~tasa_IPC_diff, order = 3)
+grangertest(precio_cobre_diff~IPC_diff, order = 3)
 #0.06009 .
-grangertest(precio_cobre_diff~tasa_IPC_diff, order = 4)
+grangertest(precio_cobre_diff~IPC_diff, order = 4)
 #0.1035
-grangertest(precio_cobre_diff~tasa_IPC_diff, order = 5)
+grangertest(precio_cobre_diff~IPC_diff, order = 5)
 #0.2842
-grangertest(precio_cobre_diff~tasa_IPC_diff, order = 6)
+grangertest(precio_cobre_diff~IPC_diff, order = 6)
 #0.247
-grangertest(precio_cobre_diff~tasa_IPC_diff, order = 7)
+grangertest(precio_cobre_diff~IPC_diff, order = 7)
 #0.1419
-grangertest(precio_cobre_diff~tasa_IPC_diff, order = 8)
+grangertest(precio_cobre_diff~IPC_diff, order = 8)
 #0.16
-grangertest(precio_cobre_diff~tasa_IPC_diff, order = 9)
+grangertest(precio_cobre_diff~IPC_diff, order = 9)
 #0.2625
-grangertest(precio_cobre_diff~tasa_IPC_diff, order = 10)
+grangertest(precio_cobre_diff~IPC_diff, order = 10)
 #0.426
-grangertest(precio_cobre_diff~tasa_IPC_diff, order = 11)
+grangertest(precio_cobre_diff~IPC_diff, order = 11)
 #0.5444
-grangertest(precio_cobre_diff~tasa_IPC_diff, order = 12)
+grangertest(precio_cobre_diff~IPC_diff, order = 12)
 #0.6467
 
 #No hay causalidad
+
+# H0: La tasa de desempleo no es causada en el sentido de granger por el precio del cobre > 0,05
+# H1: La tasa de desempleo sí es causada en el sentido de granger por el precio del cobre < 0,05
+
+grangertest(tasa_desempleo_diff~precio_cobre_diff, order = 1)
+grangertest(tasa_desempleo_diff~precio_cobre_diff, order = 2)
+#0.02944 *
+
+## AL REVES
+grangertest(precio_cobre_diff~tasa_desempleo_diff, order = 1)
+grangertest(precio_cobre_diff~tasa_desempleo_diff, order = 2)
+grangertest(precio_cobre_diff~tasa_desempleo_diff, order = 3)
+grangertest(precio_cobre_diff~tasa_desempleo_diff, order = 4)
+grangertest(precio_cobre_diff~tasa_desempleo_diff, order = 5)
+grangertest(precio_cobre_diff~tasa_desempleo_diff, order = 6)
+grangertest(precio_cobre_diff~tasa_desempleo_diff, order = 7)
+grangertest(precio_cobre_diff~tasa_desempleo_diff, order = 8)
+grangertest(precio_cobre_diff~tasa_desempleo_diff, order = 9)
+grangertest(precio_cobre_diff~tasa_desempleo_diff, order = 10)
+grangertest(precio_cobre_diff~tasa_desempleo_diff, order = 11)
+grangertest(precio_cobre_diff~tasa_desempleo_diff, order = 12)
+
+##No hay causalidad
+
+# H0: El pib manufacturero no es causado en el sentido de granger por el precio del cobre > 0,05
+# H1: El pib manufacturero sí es causado en el sentido de granger por el precio del cobre < 0,05
+
+grangertest(pib_manufacturas_diff~precio_cobre_diff, order = 1)
+grangertest(pib_manufacturas_diff~precio_cobre_diff, order = 2)
+grangertest(pib_manufacturas_diff~precio_cobre_diff, order = 3)
+grangertest(pib_manufacturas_diff~precio_cobre_diff, order = 4)
+grangertest(pib_manufacturas_diff~precio_cobre_diff, order = 5)
+grangertest(pib_manufacturas_diff~precio_cobre_diff, order = 6)
+## 0.01108 *
+
+###Al reves
+
+grangertest(precio_cobre_diff~pib_manufacturas_diff, order = 1)
+grangertest(precio_cobre_diff~pib_manufacturas_diff, order = 2)
+grangertest(precio_cobre_diff~pib_manufacturas_diff, order = 3)
+grangertest(precio_cobre_diff~pib_manufacturas_diff, order = 4)
+grangertest(precio_cobre_diff~pib_manufacturas_diff, order = 5)
+grangertest(precio_cobre_diff~pib_manufacturas_diff, order = 6)
+grangertest(precio_cobre_diff~pib_manufacturas_diff, order = 7)
+grangertest(precio_cobre_diff~pib_manufacturas_diff, order = 8)
+grangertest(precio_cobre_diff~pib_manufacturas_diff, order = 9)
+grangertest(precio_cobre_diff~pib_manufacturas_diff, order = 10)
+grangertest(precio_cobre_diff~pib_manufacturas_diff, order = 11)
+grangertest(precio_cobre_diff~pib_manufacturas_diff, order = 12)
 
 ###PASAMOS AL MODELO VAR
 tcambio_real_diff=ts(tcambio_real_diff, start = 1985, freq = 4)
