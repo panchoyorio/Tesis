@@ -18,7 +18,7 @@ library(nlme)
 library(strucchange)
 library(quantmod)
 library(xts)
-
+library(Hmisc)
 
 #Importamos la base de datos
 
@@ -27,25 +27,25 @@ ruta_excel <-  "C:\\Users\\fcoyo\\Documents\\GitHub\\Tesis\\Base de Datos Oficia
 Base_datos <- read_excel(ruta_excel,
                          sheet = "DATOS.TS")
 
-Base_datos.ts = ts(Base_datos, start = 1985, frequency = 4)
-Base_datos.ts
-plot(Base_datos.ts, main="Comportamiento de las variables")
+Base_datos = ts(Base_datos, start = 1986, frequency = 4)
+Base_datos
+plot(Base_datos, main="Comportamiento de las variables")
 
 
 #Creo una base sin dummys solo para hacer un grafico bonito
 Base_graficada_1 <- read_excel(ruta_excel,
                          sheet = "Base_graficada_1")
 
-Base_graficada_1.ts= ts(Base_graficada_1, start = 1985, frequency = 4)
-Base_graficada_1.ts
-plot(Base_graficada_1.ts, main="Comportamiento de las variables")
+Base_graficada_1= ts(Base_graficada_1, start = 1986, frequency = 4)
+Base_graficada_1
+plot(Base_graficada_1, main="Comportamiento de las variables")
 
 
 ####Grafico con PIB de cada servicio en vez de valor añadido
 Base_graficada_2 <- read_excel(ruta_excel,
                                sheet = "Base_graficada_2")
 
-Base_graficada_2= ts(Base_graficada_2, start = 1985, frequency = 4)
+Base_graficada_2= ts(Base_graficada_2, start = 1986, frequency = 4)
 Base_graficada_2
 plot(Base_graficada_2, main="Comportamiento de las variables")
 
@@ -55,44 +55,44 @@ plot(Base_graficada_2, main="Comportamiento de las variables")
 
 #Separo las variables 
 
-tcambio_real = ts(Base_datos.ts[,1], start=1985, freq=4)
+tcambio_real = ts(Base_datos[,1], start=1986, freq=4)
 tcambio_real
-tcambio_dolarobs = ts(Base_datos.ts[,2], start=1985, freq=4)
+tcambio_dolarobs = ts(Base_datos[,2], start=1986, freq=4)
 tcambio_dolarobs
-tasa_TPM = ts(Base_datos.ts[,3], start=1985, freq=4)
-tasa_TPM
-tasa_captación = ts(Base_datos.ts[,4], start=1985, freq=4)
+TPM = ts(Base_datos[,3], start=1986, freq=4)
+TPM
+tasa_captación = ts(Base_datos[,4], start=1986, freq=4)
 tasa_captación
-tasa_colocación = ts(Base_datos.ts[,5], start=1985, freq=4)
+tasa_colocación = ts(Base_datos[,5], start=1986, freq=4)
 tasa_colocación
-IPC = ts(Base_datos.ts[,6], start=1985, freq=4)
+IPC = ts(Base_datos[,6], start=1986, freq=4)
 IPC
-IPC_acum = ts(Base_datos.ts[,7], start=1985, freq=4)
+IPC_acum = ts(Base_datos[,7], start=1986, freq=4)
 IPC_acum
-tasa_desempleo = ts(Base_datos.ts[,8], start=1985, freq=4)
+tasa_desempleo = ts(Base_datos[,8], start=1986, freq=4)
 tasa_desempleo
-precio_cobre = ts(Base_datos.ts[,9], start=1985, freq=4)
+precio_cobre = ts(Base_datos[,9], start=1986, freq=4)
 precio_cobre
-pib_manufacturas =  ts(Base_datos.ts[,10], start=1985, freq=4)
+pib_manufacturas =  ts(Base_datos[,10], start=1986, freq=4)
 pib_manufacturas
-pib_servicios =  ts(Base_datos.ts[,11], start=1985, freq=4)
+pib_servicios =  ts(Base_datos[,11], start=1986, freq=4)
 pib_servicios
-pib_minería =  ts(Base_datos.ts[,12], start=1985, freq=4)
+pib_minería =  ts(Base_datos[,12], start=1986, freq=4)
 pib_minería
-VA_manufacturas =  ts(Base_datos.ts[,13], start=1985, freq=4)
+VA_manufacturas =  ts(Base_datos[,13], start=1986, freq=4)
 VA_manufacturas
-VA_servicios =  ts(Base_datos.ts[,14], start=1985, freq=4)
+VA_servicios =  ts(Base_datos[,14], start=1986, freq=4)
 VA_servicios
-VA_minería =  ts(Base_datos.ts[,15], start=1985, freq=4)
+VA_minería =  ts(Base_datos[,15], start=1986, freq=4)
 VA_minería
-tipo_gob =  ts(Base_datos.ts[,16], start=1985, freq=4)
+tipo_gob =  ts(Base_datos[,16], start=1986, freq=4)
 tipo_gob
-crisis_ec =  ts(Base_datos.ts[,17], start=1985, freq=4)
+crisis_ec =  ts(Base_datos[,17], start=1986, freq=4)
 crisis_ec
 #Graficos 
 plot(tcambio_real, ylab="Precio", xlab="Trimestres", main="Tipo de Cambio Real en Chile", col="blue")
 plot(tcambio_dolarobs, ylab="Precio", xlab="Trimestres", main="Valor del dolar observado en Chile", col="blue")
-plot(tasa_TPM, ylab="Tasa", xlab="Trimestres", main="TPM", col="blue")
+plot(TPM, ylab="Tasa", xlab="Trimestres", main="TPM", col="blue")
 plot(tasa_captación, ylab="Tasa", xlab="Trimestres", main="Tasa de Captación", col="blue")
 plot(tasa_colocación, ylab="Tasa", xlab="Trimestres", main="Tasa de Colocación", col="blue")
 plot(IPC, ylab="Índice", xlab="Trimestres", main="IPC variación mensual", col="blue")
@@ -106,17 +106,32 @@ plot(VA_manufacturas, ylab="Porcentaje del PIB", xlab="Valor Añadido del Sector
 plot(VA_servicios, ylab="Porcentaje del PIB", xlab="Valor Añadido del Sector Servicios", col="blue")
 plot(VA_minería, ylab="Rentas Mineras como Porcentaje del PIB", xlab="Valor Añadido del Sector Minería", col="blue")
 
+### Algunos interesantes
+
+plot(cbind(precio_cobre, tcambio_dolarobs), main="Precio del Cobre - Dolar Observado", col="blue")
+plot(cbind(precio_cobre, VA_manufacturas), main="Precio del Cobre - Valor Añadido Manufacturas", col="blue")
+plot(cbind(precio_cobre, VA_servicios), main="Precio del Cobre - Valor Añadido Servicios", col="blue")
+plot(cbind(precio_cobre, VA_minería), main="Precio del Cobre - Valor Añadido Minería", col="blue")
+plot(cbind(precio_cobre, pib_manufacturas), main="Precio del Cobre - PIB Manufacturas", col="blue")
+plot(cbind(precio_cobre, pib_servicios), main="Precio del Cobre -PIB Servicios", col="blue")
+plot(cbind(precio_cobre, pib_minería), main="Precio del Cobre - PIB Minería", col="blue")
+plot(cbind(VA_manufacturas, pib_manufacturas), main="Valor Añadido - Pib Manufacturas", col="blue")
+plot(cbind(VA_manufacturas, VA_minería), main="Valor Añadido Manufacturas - Minería", col="blue")
+ts.plot(precio_cobre, VA_manufacturas, main="Precio del Cobre - Valor Añadido Manufacturas", col=c( "blue", "red"))
+ts.plot(VA_minería, VA_manufacturas, main="Valor Añadido Minería - Manufacturas", col=c( "blue", "red"))
+
+
 ### Gráficos estacionales para el tipo de cambio real, la TPM, y el precio del cobre
 
 seasonplot(tcambio_dolarobs, col=rainbow(12), year.labels = TRUE, main = "Grafico Estacional - Tipo de Cambio Real")
-seasonplot(tasa_TPM, col=rainbow(12), year.labels = TRUE, main = "Grafico Estacional - TPM")
+seasonplot(TPM, col=rainbow(12), year.labels = TRUE, main = "Grafico Estacional - TPM")
 seasonplot(precio_cobre, col=rainbow(12), year.labels = TRUE, main = "Grafico Estacional - Precio del Cobre")
 
 ## Observamos las funciones de autocorrelación de cada variable para ver si son estacionarias
 
 acf(tcambio_real)
 acf(tcambio_dolarobs)
-acf(tasa_TPM)
+acf(TPM)
 acf(tasa_captación)
 acf(tasa_colocación)
 acf(IPC)
@@ -136,7 +151,7 @@ acf(crisis_ec)
 
 ndiffs(tcambio_real)
 ndiffs(tcambio_dolarobs)
-ndiffs(tasa_TPM)
+ndiffs(TPM)
 ndiffs(tasa_captación)
 ndiffs(tasa_colocación)
 ndiffs(IPC)
@@ -152,12 +167,15 @@ ndiffs(VA_minería)
 ndiffs(tipo_gob)
 ndiffs(crisis_ec)
 
+
 ### RESULTADOS: LA MAYORÍA REQUIERE PRIMERA DIFERENCIA, EL PIB SERVICIOS
-#NECESITA 2, EL VALOR AÑADIDO EN MINERÍA NO NECESITA DIFERENCIA
+#NECESITA 2
+
+####### Diferencias
 
 tcambio_real_diff=diff(tcambio_real)
 tcambio_dolarobs_diff=diff(tcambio_dolarobs)
-tasa_TPM_diff=diff(tasa_TPM)
+TPM_diff=diff(TPM)
 tasa_captación_diff=diff(tasa_captación)
 tasa_colocación_diff=diff(tasa_colocación)
 IPC_diff=diff(IPC)
@@ -178,13 +196,102 @@ ndiffs(pib_servicios_diff)
 ##Aún falta una diferencia
 pib_servicios_diff2=diff(pib_servicios_diff)
 
-#Graficamos
 
-#Graficos 
+#Prueba de Dickey Fuller
+
+adf.test(tcambio_real, alternative = "stationary")
+#p-value = 0.6533
+adf.test(tcambio_dolarobs, alternative = "stationary")
+#p-value = 0.5356
+adf.test(TPM, alternative = "stationary")
+#p-value = 0.04617
+adf.test(tasa_captación, alternative = "stationary")
+# p-value = 0.09471
+adf.test(tasa_colocación, alternative = "stationary")
+#p-value = 0.07162
+adf.test(IPC, alternative = "stationary")
+#p-value = 0.2413
+adf.test(IPC_acum, alternative = "stationary")
+#p-value = 0.61111
+adf.test(tasa_desempleo, alternative = "stationary")
+#p-value = 0.3831
+adf.test(precio_cobre, alternative = "stationary")
+#p-value = 0.5098
+adf.test(pib_manufacturas, alternative = "stationary")
+#p-value = 0.6332
+adf.test(pib_servicios, alternative = "stationary")
+#p-value = 0.9124
+adf.test(pib_minería, alternative = "stationary")
+#p-value = 0.3102
+adf.test(VA_manufacturas, alternative = "stationary")
+#p-value = 0.5559
+adf.test(VA_servicios, alternative = "stationary")
+#p-value = 0.3611
+adf.test(VA_minería, alternative = "stationary")
+#p-value = 0.4951
+adf.test(tipo_gob, alternative = "stationary")
+#p-value = 0.422
+adf.test(crisis_ec, alternative = "stationary")
+#p-value = 0,25584
+
+#Para todas las variables se obtuvieron p values > 0,05 (Excepto TPM)
+
+adf.test(tcambio_real_diff, alternative = "stationary")
+#p-value = 0.01
+adf.test(tcambio_dolarobs_diff, alternative = "stationary")
+#p-value = 0.01239
+adf.test(TPM_diff, alternative = "stationary")
+#p-value = 0.01
+adf.test(tasa_captación_diff, alternative = "stationary")
+# p-value = 0.01
+adf.test(tasa_colocación_diff, alternative = "stationary")
+#p-value = 0.01
+adf.test(IPC_diff, alternative = "stationary")
+#p-value = 0.01
+adf.test(IPC_acum_diff, alternative = "stationary")
+#p-value = 0.01
+adf.test(tasa_desempleo_diff, alternative = "stationary")
+#p-value = 0.01
+adf.test(precio_cobre_diff, alternative = "stationary")
+#p-value = 0.01
+adf.test(pib_manufacturas_diff, alternative = "stationary")
+#p-value = 0.01
+adf.test(pib_servicios_diff, alternative = "stationary")
+#p-value = 0.01
+adf.test(pib_minería_diff, alternative = "stationary")
+#p-value = 0.01
+adf.test(VA_manufacturas_diff, alternative = "stationary")
+#p-value = 0.0945
+adf.test(VA_servicios_diff, alternative = "stationary")
+#p-value = 0.01
+adf.test(VA_minería_diff, alternative = "stationary")
+#p-value = 0.01
+adf.test(tipo_gob_diff, alternative = "stationary")
+#p-value = 0.01
+adf.test(crisis_ec_diff, alternative = "stationary")
+#p-value = 0.01
+
+ndiffs(VA_manufacturas_diff)
+
+###Debemos elegir un criterio para medir la estacionariedad, podemos guiarnos por
+#la interpreteción de los resultados de la prueba ndiffs (la cual se basa en las 
+#pruebas kpps, adf y pp) o direnctamente utilizar los dickey fuller (adf); En el primer 
+#caso señala que se debe aplicar segunda diferencia al pib servicios, en el segundo caso
+# señala que se debe aplicar segunda diff a valor añadido en manufacturas, 
+
+#Se realiza segunda diff
+VA_manufacturas_diff2=diff(VA_manufacturas_diff)
+
+adf.test(VA_manufacturas_diff2, alternative = "stationary")
+#p-value = 0.01
+
+
+###Graficamos
+
 
 plot(tcambio_real_diff, ylab="Precio", xlab="Trimestres", main="Tipo de Cambio Real", col="blue")
 plot(tcambio_dolarobs_diff, ylab="Precio", xlab="Trimestres", main="Dolar Observado", col="blue")
-plot(tasa_TPM_diff, ylab="Tasa", xlab="Trimestres", main="TPM", col="blue")
+plot(TPM_diff, ylab="Tasa", xlab="Trimestres", main="TPM", col="blue")
 plot(tasa_captación_diff, ylab="Tasa", xlab="Trimestres", main="Tasa de Captación", col="blue")
 plot(tasa_colocación_diff, ylab="Tasa", xlab="Trimestres", main="Tasa de Colocación", col="blue")
 plot(IPC_diff, ylab="Índice", xlab="Trimestres", main="IPC general", col="blue")
@@ -195,7 +302,7 @@ plot(pib_manufacturas_diff, ylab="PIB", xlab="Trimestres", main="Sector Manufact
 plot(pib_servicios_diff, ylab="PIB", xlab="Trimestres", main="Sector Servicios (1dif)", col="blue")
 plot(pib_servicios_diff2, ylab="PIB", xlab="Trimestres", main="Sector Servicios (2dif)", col="blue")
 plot(pib_minería_diff, ylab="PIB", xlab="Trimestres", main="Sector Minero", col="blue")
-plot(VA_manufacturas_diff, ylab="Valor Añadido (% del PIB)", xlab="Trimestres", main="Sector Manufacturero", col="blue")
+plot(VA_manufacturas_diff2, ylab="Valor Añadido (% del PIB)", xlab="Trimestres", main="Sector Manufacturero", col="blue")
 plot(VA_servicios_diff, ylab="Valor Añadido (% del PIB)", xlab="Trimestres", main="Sector Servicios", col="blue")
 plot(VA_minería_diff, ylab="Valor Añadido (% del PIB)", xlab="Trimestres", main="Sector Minero", col="blue")
 
@@ -204,7 +311,7 @@ plot(VA_minería_diff, ylab="Valor Añadido (% del PIB)", xlab="Trimestres", mai
 
 acf(tcambio_real_diff)
 acf(tcambio_dolarobs_diff)
-acf(tasa_TPM_diff)
+acf(TPM_diff)
 acf(tasa_captación_diff)
 acf(tasa_colocación_diff)
 acf(IPC_diff)
@@ -230,7 +337,7 @@ acf(tcambio_dolarobs_diff, main="Serie Estacionaria")
 
 plot(IPC, ylab="IPC", xlab="Tiempo")
 acf(IPC, main="Serie no Estacionaria")
-plot(IPC_diff, ylab="Tasa de Política Monetaria", xlab="Tiempo")
+plot(IPC_diff, ylab="IPC", xlab="Tiempo")
 acf(IPC_diff, main="Serie Estacionaria")
 
 plot(precio_cobre, ylab="Precio", xlab="Tiempo")
@@ -238,89 +345,6 @@ acf(precio_cobre, main="Serie no Estacionaria")
 plot(precio_cobre_diff, ylab="Precio del cobre", xlab="Tiempo")
 acf(precio_cobre_diff, main="Serie Estacionaria")
 
-#Prueba de Dickey Fuller
-
-adf.test(tcambio_real, alternative = "stationary")
-#p-value = 0.6533
-adf.test(tcambio_dolarobs, alternative = "stationary")
-#p-value = 0.5356
-adf.test(tasa_TPM, alternative = "stationary")
-#p-value = 0.07394
-adf.test(tasa_captación, alternative = "stationary")
-# p-value = 0.09471
-adf.test(tasa_colocación, alternative = "stationary")
-#p-value = 0.07162
-adf.test(IPC, alternative = "stationary")
-#p-value = 0.2413
-adf.test(IPC_acum, alternative = "stationary")
-#p-value = 0.61111
-adf.test(tasa_desempleo, alternative = "stationary")
-#p-value = 0.3831
-adf.test(precio_cobre, alternative = "stationary")
-#p-value = 0.5098
-adf.test(pib_manufacturas, alternative = "stationary")
-#p-value = 0.6332
-adf.test(pib_servicios, alternative = "stationary")
-#p-value = 0.9124
-adf.test(pib_minería, alternative = "stationary")
-#p-value = 0.3102
-adf.test(VA_manufacturas, alternative = "stationary")
-#p-value = 0.5559
-adf.test(VA_servicios, alternative = "stationary")
-#p-value = 0.3611
-adf.test(VA_minería, alternative = "stationary")
-#p-value = 0.5581
-adf.test(tipo_gob, alternative = "stationary")
-#p-value = 0.422
-adf.test(crisis_ec, alternative = "stationary")
-#p-value = 0,25584
-
-#Para todas las variables se obtuvieron p values > 0,05 
-
-adf.test(tcambio_real_diff, alternative = "stationary")
-#p-value = 0.01
-adf.test(tcambio_dolarobs_diff, alternative = "stationary")
-#p-value = 0.01
-adf.test(tasa_TPM_diff, alternative = "stationary")
-#p-value = 0.01
-adf.test(tasa_captación_diff, alternative = "stationary")
-# p-value = 0.01
-adf.test(tasa_colocación_diff, alternative = "stationary")
-#p-value = 0.01
-adf.test(IPC_diff, alternative = "stationary")
-#p-value = 0.01
-adf.test(IPC_acum_diff, alternative = "stationary")
-#p-value = 0.01
-adf.test(tasa_desempleo_diff, alternative = "stationary")
-#p-value = 0.01
-adf.test(precio_cobre_diff, alternative = "stationary")
-#p-value = 0.01
-adf.test(pib_manufacturas_diff, alternative = "stationary")
-#p-value = 0.01
-adf.test(pib_servicios_diff, alternative = "stationary")
-#p-value = 0.01
-adf.test(pib_minería_diff, alternative = "stationary")
-#p-value = 0.01
-adf.test(VA_manufacturas_diff, alternative = "stationary")
-#p-value = 0.08597
-adf.test(VA_servicios_diff, alternative = "stationary")
-#p-value = 0.01
-adf.test(VA_minería_diff, alternative = "stationary")
-#p-value = 0.01
-adf.test(tipo_gob_diff, alternative = "stationary")
-#p-value = 0.01
-adf.test(crisis_ec_diff, alternative = "stationary")
-#p-value = 0.01
-
-##Todas las variables (diferencias) arrojan pvalue < 0,05
-#Excepto Valor añadido de manufacturas (curioso, ya que NDIF pronosticaba
-#que pib_servicios necesitaría 2 diff, necesitó solo 1, pero VA_manufacturas
-#2)
-#Se realiza segunda diff
-VA_manufacturas_diff2=diff(VA_manufacturas_diff)
-
-adf.test(VA_manufacturas_diff2, alternative = "stationary")
-#p-value = 0.01
 
 #Funciones de autocorrelacion y autocorrelación Parcial
 
@@ -332,8 +356,8 @@ pacf(tcambio_real_diff, main="Función de Auto Correlación Parcial")
 acf(tcambio_dolarobs_diff, main="Dolar Observado - Función de Auto Correlación")
 pacf(tcambio_dolarobs_diff, main="Función de Auto Correlación Parcial")
 
-acf(tasa_TPM_diff, main="TPM - Función de Auto Correlación")
-pacf(tasa_TPM_diff, main="Función de Auto Correlación Parcial")
+acf(TPM_diff, main="TPM - Función de Auto Correlación")
+pacf(TPM_diff, main="Función de Auto Correlación Parcial")
 
 acf(tasa_captación_diff, main="Tasa de Captación - Función de Auto Correlación")
 pacf(tasa_captación_diff, main="Función de Auto Correlación Parcial")
@@ -385,40 +409,6 @@ pacf(VA_minería_diff, main="Función de Auto Correlación Parcial")
 #Para graficar
 par(mfrow=c(1,1), mar=c(4,4,4,1) + .1)
 
-ts.plot(precio_cobre_diff, tcambio_real_diff, tasa_TPM_diff, tasa_captación_diff, tasa_colocación_diff, tasa_IPC_diff, tasa_IPC_acum_diff, tcambio_dolarobs_diff, col=c( "blue", "red", "orange", "yellow", "green", "pink", "black", "brown"))
-
-##El gráfico no se ve bien porque la variable tipo de cambio (real y dolar obs) 
-#poseen valores muy altos, usaré logaritmos
-
-
-#logtcambio_real <- log(tcambio_real)
-#logtcambio_dolarobs <- log(tcambio_dolarobs)
-#logtasa_TPM <- log(tasa_TPM)
-#logtasa_captación <- log(tasa_captación)
-#logtasa_colocación <- log(tasa_colocación)
-#logIPC <- log(tasa_IPC)
-#logIPC_acum <- log(tasa_IPC_acum)
-#logprecio_cobre <- log(precio_cobre)
-
-# Warning message:
-#   In log(tasa_IPC) : NaNs produced
-
-#log_tcambio_real_diff=diff(logtcambio_real)
-#log_tcambio_dolarobs_diff=diff(logtcambio_dolarobs)
-#log_tasa_TPM_diff=diff(logtasa_TPM)
-#log_tasa_captación_diff=diff(logtasa_captación)
-#log_tasa_colocación_diff=diff(logtasa_colocación)
-#log_tasa_IPC_diff=diff(logtasa_IPC)
-#log_tasa_IPC_acum_diff=diff(logtasa_IPC_acum)
-#log_precio_cobre_diff=diff(logprecio_cobre) 
-
-
-#Segundo intento
-
-#ts.plot(precio_cobre_diff, log_tcambio_real_diff, tasa_TPM_diff, tasa_captación_diff, tasa_colocación_diff, tasa_IPC_diff, tasa_IPC_acum_diff, log_tcambio_dolarobs_diff, col=c( "blue", "red", "orange", "yellow", "green", "pink", "black", "brown"))
-
-#Se usan Logaritmos
-#ts.plot(log_precio_cobre_diff, log_tcambio_real_diff, log_tasa_TPM_diff, log_tasa_captación_diff, log_tasa_colocación_diff, log_tasa_IPC_diff, log_tasa_IPC_acum_diff, log_tcambio_dolarobs_diff, col=c( "blue", "red", "orange", "yellow", "green", "pink", "black", "brown"))
 
 # El grafico se ve mejor
 
@@ -447,6 +437,26 @@ grangertest(tcambio_real_diff~precio_cobre_diff, order = 1)
 #por ende tambien se rechaza la hipotesis nula, lo que
 #quiere decir que el precio del cobre sí causa al tipo de cambio real
 
+# H0: El dólar observado no es causado en el sentido de granger por el  precio del cobre > 0,05
+# H1: El dólar observado sí es causado en el sentido de granger por el precio del cobre < 0,05
+
+
+grangertest(tcambio_dolarobs_diff~precio_cobre_diff, order = 1)
+grangertest(tcambio_dolarobs_diff~precio_cobre_diff, order = 2)
+grangertest(tcambio_dolarobs_diff~precio_cobre_diff, order = 3)
+grangertest(tcambio_dolarobs_diff~precio_cobre_diff, order = 4)
+grangertest(tcambio_dolarobs_diff~precio_cobre_diff, order = 5)
+grangertest(tcambio_dolarobs_diff~precio_cobre_diff, order = 6)
+grangertest(tcambio_dolarobs_diff~precio_cobre_diff, order = 7)
+grangertest(tcambio_dolarobs_diff~precio_cobre_diff, order = 8)
+##0.03061 *
+
+# H0: El precio del cobre no es causado en el sentido de granger por el  dólar observado > 0,05
+# H1: El precio del cobre sí es causado en el sentido de granger por el  dólar observado < 0,05
+
+grangertest(precio_cobre_diff~tcambio_dolarobs_diff, order = 1)
+#0.002209 **
+
 #Probaremos causalidad desde la TPM al tipo de cambio real
 
 # H0: El tipo de cambio real no es causado en el sentido de granger por la TPM > 0,05
@@ -454,53 +464,53 @@ grangertest(tcambio_real_diff~precio_cobre_diff, order = 1)
 
 
 #grangertest(log_tcambio_real_diff~log_tasa_TPM_diff, order = 1)
-grangertest(tcambio_real_diff~tasa_TPM_diff, order = 1)
+grangertest(tcambio_real_diff~TPM_diff, order = 1)
 #Se obtuvo  0.7623 > 0,05, por lo que se acepta la hipotesis nula, no hay causalidad
 # 0.6638 sin log
 
 #Se hace la prueba de segundo orden
 #grangertest(log_tcambio_real_diff~log_tasa_TPM_diff, order = 2)
-grangertest(tcambio_real_diff~tasa_TPM_diff, order = 2)
+grangertest(tcambio_real_diff~TPM_diff, order = 2)
 #Se obtiene 0,9 (0,8 sin log), se procede a probar con tercer orden
 #grangertest(log_tcambio_real_diff~log_tasa_TPM_diff, order = 3)
-grangertest(tcambio_real_diff~tasa_TPM_diff, order = 3)
+grangertest(tcambio_real_diff~TPM_diff, order = 3)
 #Da 0,6, 0,3 sin log
 #grangertest(log_tcambio_real_diff~log_tasa_TPM_diff, order = 4)
-grangertest(tcambio_real_diff~tasa_TPM_diff, order = 4)
+grangertest(tcambio_real_diff~TPM_diff, order = 4)
 #0.7, 0.4
 #grangertest(log_tcambio_real_diff~log_tasa_TPM_diff, order = 5)
-grangertest(tcambio_real_diff~tasa_TPM_diff, order = 5)
+grangertest(tcambio_real_diff~TPM_diff, order = 5)
 #0.7, 0.4
 #grangertest(log_tcambio_real_diff~log_tasa_TPM_diff, order = 6)
-grangertest(tcambio_real_diff~tasa_TPM_diff, order = 6)
+grangertest(tcambio_real_diff~TPM_diff, order = 6)
 #0.6, 0.3
 #grangertest(log_tcambio_real_diff~log_tasa_TPM_diff, order = 7)
-grangertest(tcambio_real_diff~tasa_TPM_diff, order = 7)
+grangertest(tcambio_real_diff~TPM_diff, order = 7)
 #0.43, 0.18
 #grangertest(log_tcambio_real_diff~log_tasa_TPM_diff, order = 8)
-grangertest(tcambio_real_diff~tasa_TPM_diff, order = 8)
+grangertest(tcambio_real_diff~TPM_diff, order = 8)
 #0.4, 0.12
 #grangertest(log_tcambio_real_diff~log_tasa_TPM_diff, order = 9)
-grangertest(tcambio_real_diff~tasa_TPM_diff, order = 9)
+grangertest(tcambio_real_diff~TPM_diff, order = 9)
 #0.46, 0.14
 #grangertest(log_tcambio_real_diff~log_tasa_TPM_diff, order = 10)
-grangertest(tcambio_real_diff~tasa_TPM_diff, order = 10)
+grangertest(tcambio_real_diff~TPM_diff, order = 10)
 #0.51, 0.19
 #grangertest(log_tcambio_real_diff~log_tasa_TPM_diff, order = 11)
-grangertest(tcambio_real_diff~tasa_TPM_diff, order = 11)
+grangertest(tcambio_real_diff~TPM_diff, order = 11)
 #0.52, 0.05483
 #grangertest(log_tcambio_real_diff~log_tasa_TPM_diff, order = 12)
-grangertest(tcambio_real_diff~tasa_TPM_diff, order = 12)
+grangertest(tcambio_real_diff~TPM_diff, order = 12)
 #0.44, 0.04879
 
 # H0:La TPM no es causada en el sentido de granger por el tipo de cambio real > 0,05
 # H1: El tipo de cambio real sí es causado en el sentido de granger por la TPM < 0,05
 
 #grangertest(log_tasa_TPM_diff~log_tcambio_real_diff, order = 1)
-grangertest(tasa_TPM_diff~tcambio_real_diff, order = 1)
+grangertest(TPM_diff~tcambio_real_diff, order = 1)
 #0.742
 #grangertest(log_tasa_TPM_diff~log_tcambio_real_diff, order = 2)
-grangertest(tasa_TPM_diff~tcambio_real_diff, order = 2)
+grangertest(TPM_diff~tcambio_real_diff, order = 2)
 #0.0228*
 
 ### Se encuentra causalidad desde el tipo de cambio real a la tpm 
@@ -550,45 +560,45 @@ grangertest(tipo_gob_diff~tcambio_real_diff, order = 12)
 # H1: El precio del cobre real sí es causado en el sentido de granger por la TPM < 0,05
 
 #grangertest(log_precio_cobre_diff~log_tasa_TPM_diff, order = 1)
-grangertest(precio_cobre_diff~tasa_TPM_diff, order = 1)
+grangertest(precio_cobre_diff~TPM_diff, order = 1)
 
 #0.06063 *
 
 #grangertest(log_precio_cobre_diff~log_tasa_TPM_diff, order = 2)
-grangertest(precio_cobre_diff~tasa_TPM_diff, order = 2)
+grangertest(precio_cobre_diff~TPM_diff, order = 2)
 #0.375
 
 #grangertest(log_precio_cobre_diff~log_tasa_TPM_diff, order = 3)
-grangertest(precio_cobre_diff~tasa_TPM_diff, order = 3)
+grangertest(precio_cobre_diff~TPM_diff, order = 3)
 #0.51
 
 #grangertest(log_precio_cobre_diff~log_tasa_TPM_diff, order = 4)
-grangertest(precio_cobre_diff~tasa_TPM_diff, order = 4)
+grangertest(precio_cobre_diff~TPM_diff, order = 4)
 #0.7, 0.5
 
 #grangertest(log_precio_cobre_diff~log_tasa_TPM_diff, order = 5)
-grangertest(precio_cobre_diff~tasa_TPM_diff, order = 5)
+grangertest(precio_cobre_diff~TPM_diff, order = 5)
 #0.8, 0.8
 #grangertest(log_precio_cobre_diff~log_tasa_TPM_diff, order = 6)
-grangertest(precio_cobre_diff~tasa_TPM_diff, order = 6)
+grangertest(precio_cobre_diff~TPM_diff, order = 6)
 #0.8, 0.5
 #grangertest(log_precio_cobre_diff~log_tasa_TPM_diff, order = 7)
-grangertest(precio_cobre_diff~tasa_TPM_diff, order = 7)
+grangertest(precio_cobre_diff~TPM_diff, order = 7)
 #0.8, 0.21
 #grangertest(log_precio_cobre_diff~log_tasa_TPM_diff, order = 8)
-grangertest(precio_cobre_diff~tasa_TPM_diff, order = 8)
+grangertest(precio_cobre_diff~TPM_diff, order = 8)
 #0.9, 0.59 
 #grangertest(log_precio_cobre_diff~log_tasa_TPM_diff, order = 9)
-grangertest(precio_cobre_diff~tasa_TPM_diff, order = 9)
+grangertest(precio_cobre_diff~TPM_diff, order = 9)
 #0.9, 0.65
 #grangertest(log_precio_cobre_diff~log_tasa_TPM_diff, order = 10)
-grangertest(precio_cobre_diff~tasa_TPM_diff, order = 10)
+grangertest(precio_cobre_diff~TPM_diff, order = 10)
 #0.8, 0.7
 #grangertest(log_precio_cobre_diff~log_tasa_TPM_diff, order = 11)
-grangertest(precio_cobre_diff~tasa_TPM_diff, order = 11)
+grangertest(precio_cobre_diff~TPM_diff, order = 11)
 #0.5, 0.63
 #grangertest(log_precio_cobre_diff~log_tasa_TPM_diff, order = 12)
-grangertest(precio_cobre_diff~tasa_TPM_diff, order = 12)
+grangertest(precio_cobre_diff~TPM_diff, order = 12)
 #0.6, 0.6137
 
 # No se encuentra evidencia para causalidad desde la TPM al precio del cobre
@@ -597,15 +607,15 @@ grangertest(precio_cobre_diff~tasa_TPM_diff, order = 12)
 # H1: La TPM sí es causada en el sentido de granger por el precio del cobre < 0,05
 
 #grangertest(log_tasa_TPM_diff~log_precio_cobre_diff, order = 1)
-grangertest(tasa_TPM_diff~precio_cobre_diff, order = 1)
+grangertest(TPM_diff~precio_cobre_diff, order = 1)
 # 0.001377 **
 
-#Se encuentra evidencia de causalidad desde el precio del cobre al TPM (segundo orden)
+#Se encuentra evidencia de causalidad desde el precio del cobre al TPM 
 
 # H0: La TPM no es causada en el sentido de granger por el IPC > 0,05
 # H1: La TPM sí es causada en el sentido de granger por el IPC < 0,05
 
-grangertest(tasa_TPM_diff~IPC_diff, order = 1)
+grangertest(TPM_diff~IPC_diff, order = 1)
 ##Se genera un error al sacar logaritmo del IPC, se usan ambas variable sin log
 #Entrega un resultado de 0.03232 *, por lo que se rechaza la hip nula
 
@@ -615,29 +625,29 @@ grangertest(tasa_TPM_diff~IPC_diff, order = 1)
 # H0: El IPC no es causado en el sentido de granger por la TPM > 0,05
 # H1: El IPC sí es causado en el sentido de granger por el TPM < 0,05
 
-grangertest(IPC_diff~tasa_TPM_diff, order = 1)
+grangertest(IPC_diff~TPM_diff, order = 1)
 # 0,3
-grangertest(IPC_diff~tasa_TPM_diff, order = 2)
+grangertest(IPC_diff~TPM_diff, order = 2)
 # 0,9
-grangertest(IPC_diff~tasa_TPM_diff, order = 3)
+grangertest(IPC_diff~TPM_diff, order = 3)
 # 0,4
-grangertest(IPC_diff~tasa_TPM_diff, order = 4)
+grangertest(IPC_diff~TPM_diff, order = 4)
 # 0,5
-grangertest(IPC_diff~tasa_TPM_diff, order = 5)
+grangertest(IPC_diff~TPM_diff, order = 5)
 # 0,3
-grangertest(IPC_diff~tasa_TPM_diff, order = 6)
+grangertest(IPC_diff~TPM_diff, order = 6)
 # 0,2
-grangertest(IPC_diff~tasa_TPM_diff, order = 7)
+grangertest(IPC_diff~TPM_diff, order = 7)
 # 0,2
-grangertest(IPC_diff~tasa_TPM_diff, order = 8)
+grangertest(IPC_diff~TPM_diff, order = 8)
 # 0,2
-grangertest(IPC_diff~tasa_TPM_diff, order = 9)
+grangertest(IPC_diff~TPM_diff, order = 9)
 # 0,4
-grangertest(IPC_diff~tasa_TPM_diff, order = 10)
+grangertest(IPC_diff~TPM_diff, order = 10)
 # 0,4
-grangertest(IPC_diff~tasa_TPM_diff, order = 11)
+grangertest(IPC_diff~TPM_diff, order = 11)
 # 0,2
-grangertest(IPC_diff~tasa_TPM_diff, order = 12)
+grangertest(IPC_diff~TPM_diff, order = 12)
 # 0,2
 
 ## Se concluye que no hay causalidad desde la tasa TPM al IPC (por qué lo habría jaja)
@@ -768,45 +778,285 @@ grangertest(precio_cobre_diff~pib_manufacturas_diff, order = 10)
 grangertest(precio_cobre_diff~pib_manufacturas_diff, order = 11)
 grangertest(precio_cobre_diff~pib_manufacturas_diff, order = 12)
 
+# H0: El pib de servicios no es causado en el sentido de granger por el precio del cobre > 0,05
+# H1: El pib de servicios sí es causado en el sentido de granger por el precio del cobre < 0,05
+
+grangertest(pib_servicios_diff~precio_cobre_diff, order = 1)
+grangertest(pib_servicios_diff~precio_cobre_diff, order = 2)
+grangertest(pib_servicios_diff~precio_cobre_diff, order = 3)
+grangertest(pib_servicios_diff~precio_cobre_diff, order = 4)
+grangertest(pib_servicios_diff~precio_cobre_diff, order = 5)
+grangertest(pib_servicios_diff~precio_cobre_diff, order = 6)
+grangertest(pib_servicios_diff~precio_cobre_diff, order = 7)
+grangertest(pib_servicios_diff~precio_cobre_diff, order = 8)
+grangertest(pib_servicios_diff~precio_cobre_diff, order = 9)
+grangertest(pib_servicios_diff~precio_cobre_diff, order = 10)
+grangertest(pib_servicios_diff~precio_cobre_diff, order = 11)
+grangertest(pib_servicios_diff~precio_cobre_diff, order = 12)
+
+#No hay causalidad
+##Al reves
+
+grangertest(precio_cobre_diff~pib_servicios_diff, order = 1)
+grangertest(precio_cobre_diff~pib_servicios_diff, order = 2)
+grangertest(precio_cobre_diff~pib_servicios_diff, order = 3)
+grangertest(precio_cobre_diff~pib_servicios_diff, order = 4)
+grangertest(precio_cobre_diff~pib_servicios_diff, order = 5)
+grangertest(precio_cobre_diff~pib_servicios_diff, order = 6)
+grangertest(precio_cobre_diff~pib_servicios_diff, order = 7)
+grangertest(precio_cobre_diff~pib_servicios_diff, order = 8)
+grangertest(precio_cobre_diff~pib_servicios_diff, order = 9)
+grangertest(precio_cobre_diff~pib_servicios_diff, order = 10)
+grangertest(precio_cobre_diff~pib_servicios_diff, order = 11)
+grangertest(precio_cobre_diff~pib_servicios_diff, order = 12)
+
+
+# H0: El pib de minería no es causado en el sentido de granger por el precio del cobre > 0,05
+# H1: El pib de minería sí es causado en el sentido de granger por el precio del cobre < 0,05
+
+grangertest(pib_minería_diff~precio_cobre_diff, order = 1)
+grangertest(pib_minería_diff~precio_cobre_diff, order = 2)
+grangertest(pib_minería_diff~precio_cobre_diff, order = 3)
+grangertest(pib_minería_diff~precio_cobre_diff, order = 4)
+#0.00001984 ***
+
+##Al reves
+
+grangertest(precio_cobre_diff~pib_minería_diff, order = 1)
+##3.638e-11 ***
+
+# H0: El VA de manufacturas no es causado en el sentido de granger por el precio del cobre > 0,05
+# H1: El VA de manufacturas sí es causado en el sentido de granger por el precio del cobre < 0,05
+
+grangertest(VA_manufacturas_diff~precio_cobre_diff, order = 1)
+grangertest(VA_manufacturas_diff~precio_cobre_diff, order = 2)
+grangertest(VA_manufacturas_diff~precio_cobre_diff, order = 3)
+grangertest(VA_manufacturas_diff~precio_cobre_diff, order = 4)
+grangertest(VA_manufacturas_diff~precio_cobre_diff, order = 5)
+grangertest(VA_manufacturas_diff~precio_cobre_diff, order = 6)
+grangertest(VA_manufacturas_diff~precio_cobre_diff, order = 7)
+grangertest(VA_manufacturas_diff~precio_cobre_diff, order = 8)
+grangertest(VA_manufacturas_diff~precio_cobre_diff, order = 9)
+grangertest(VA_manufacturas_diff~precio_cobre_diff, order = 10)
+grangertest(VA_manufacturas_diff~precio_cobre_diff, order = 11)
+grangertest(VA_manufacturas_diff~precio_cobre_diff, order = 12)
+
+##Al reves
+
+grangertest(precio_cobre_diff~VA_manufacturas_diff, order = 1)
+grangertest(precio_cobre_diff~VA_manufacturas_diff, order = 2)
+grangertest(precio_cobre_diff~VA_manufacturas_diff, order = 3)
+grangertest(precio_cobre_diff~VA_manufacturas_diff, order = 4)
+grangertest(precio_cobre_diff~VA_manufacturas_diff, order = 5)
+grangertest(precio_cobre_diff~VA_manufacturas_diff, order = 6)
+grangertest(precio_cobre_diff~VA_manufacturas_diff, order = 7)
+grangertest(precio_cobre_diff~VA_manufacturas_diff, order = 8)
+grangertest(precio_cobre_diff~VA_manufacturas_diff, order = 9)
+grangertest(precio_cobre_diff~VA_manufacturas_diff, order = 10)
+grangertest(precio_cobre_diff~VA_manufacturas_diff, order = 11)
+grangertest(precio_cobre_diff~VA_manufacturas_diff, order = 12)
+
+####Es un poco raro que no haya causalidad, crearemos otra deferencia para 
+#precio del cobre y compararemos con la segunda diferencia de VA manufacturas
+
+precio_cobre_diff2=diff(precio_cobre_diff)
+adf.test(precio_cobre_diff2, alternative = "stationary")
+#p-value = 0.01
+
+grangertest(VA_manufacturas_diff2~precio_cobre_diff2, order = 1)
+grangertest(VA_manufacturas_diff2~precio_cobre_diff2, order = 2)
+grangertest(VA_manufacturas_diff2~precio_cobre_diff2, order = 3)
+grangertest(VA_manufacturas_diff2~precio_cobre_diff2, order = 4)
+grangertest(VA_manufacturas_diff2~precio_cobre_diff2, order = 5)
+grangertest(VA_manufacturas_diff2~precio_cobre_diff2, order = 6)
+grangertest(VA_manufacturas_diff2~precio_cobre_diff2, order = 7)
+grangertest(VA_manufacturas_diff2~precio_cobre_diff2, order = 8)
+grangertest(VA_manufacturas_diff2~precio_cobre_diff2, order = 9)
+grangertest(VA_manufacturas_diff2~precio_cobre_diff2, order = 10)
+grangertest(VA_manufacturas_diff2~precio_cobre_diff2, order = 11)
+grangertest(VA_manufacturas_diff2~precio_cobre_diff2, order = 12)
+
+
+##Al reves
+
+grangertest(precio_cobre_diff2~VA_manufacturas_diff2, order = 1)
+grangertest(precio_cobre_diff2~VA_manufacturas_diff2, order = 2)
+grangertest(precio_cobre_diff2~VA_manufacturas_diff2, order = 3)
+grangertest(precio_cobre_diff2~VA_manufacturas_diff2, order = 4)
+grangertest(precio_cobre_diff2~VA_manufacturas_diff2, order = 5)
+grangertest(precio_cobre_diff2~VA_manufacturas_diff2, order = 6)
+grangertest(precio_cobre_diff2~VA_manufacturas_diff2, order = 7)
+grangertest(precio_cobre_diff2~VA_manufacturas_diff2, order = 8)
+grangertest(precio_cobre_diff2~VA_manufacturas_diff2, order = 9)
+grangertest(precio_cobre_diff2~VA_manufacturas_diff2, order = 10)
+grangertest(precio_cobre_diff2~VA_manufacturas_diff2, order = 11)
+grangertest(precio_cobre_diff2~VA_manufacturas_diff2, order = 12)
+
+##No hay causalidad
+
+# H0: El VA de manufacturas no es causado en el sentido de granger por el VA de minería > 0,05
+# H1: El VA de manufacturas sí es causado en el sentido de granger por el VA de minería < 0,05
+
+grangertest(VA_manufacturas_diff~VA_minería_diff, order = 1)
+##0.001994 **
+
+#Al reves
+
+grangertest(VA_minería_diff~VA_manufacturas_diff, order = 1)
+# 0.005412 **
+
+##Si bien no se encontró causalidad desde el precio del cobre hacia el 
+#VA manufacturas, si se encontró causalidad desde VA minero a VA manufacturas
+
+
+
+# H0: El VA de manufacturas no es causado en el sentido de granger por el Dolar Observado > 0,05
+# H1: El VA de manufacturas sí es causado en el sentido de granger por el Dolar Observado < 0,05
+
+grangertest(VA_manufacturas_diff~tcambio_dolarobs_diff, order = 1)
+grangertest(VA_manufacturas_diff~tcambio_dolarobs_diff, order = 2)
+grangertest(VA_manufacturas_diff~tcambio_dolarobs_diff, order = 3)
+grangertest(VA_manufacturas_diff~tcambio_dolarobs_diff, order = 4)
+grangertest(VA_manufacturas_diff~tcambio_dolarobs_diff, order = 5)
+grangertest(VA_manufacturas_diff~tcambio_dolarobs_diff, order = 6)
+grangertest(VA_manufacturas_diff~tcambio_dolarobs_diff, order = 7)
+grangertest(VA_manufacturas_diff~tcambio_dolarobs_diff, order = 8)
+grangertest(VA_manufacturas_diff~tcambio_dolarobs_diff, order = 9)
+grangertest(VA_manufacturas_diff~tcambio_dolarobs_diff, order = 10)
+grangertest(VA_manufacturas_diff~tcambio_dolarobs_diff, order = 11)
+grangertest(VA_manufacturas_diff~tcambio_dolarobs_diff, order = 12)
+
+##Al reves 
+
+grangertest(tcambio_dolarobs_diff~VA_manufacturas_diff, order = 1)
+grangertest(tcambio_dolarobs_diff~VA_manufacturas_diff, order = 2)
+grangertest(tcambio_dolarobs_diff~VA_manufacturas_diff, order = 3)
+grangertest(tcambio_dolarobs_diff~VA_manufacturas_diff, order = 4)
+grangertest(tcambio_dolarobs_diff~VA_manufacturas_diff, order = 5)
+grangertest(tcambio_dolarobs_diff~VA_manufacturas_diff, order = 6)
+grangertest(tcambio_dolarobs_diff~VA_manufacturas_diff, order = 7)
+grangertest(tcambio_dolarobs_diff~VA_manufacturas_diff, order = 8)
+grangertest(tcambio_dolarobs_diff~VA_manufacturas_diff, order = 9)
+grangertest(tcambio_dolarobs_diff~VA_manufacturas_diff, order = 10)
+grangertest(tcambio_dolarobs_diff~VA_manufacturas_diff, order = 11)
+grangertest(tcambio_dolarobs_diff~VA_manufacturas_diff, order = 12)
+
+tcambio_dolarobs_diff2=diff(tcambio_dolarobs_diff)
+adf.test(tcambio_dolarobs_diff2, alternative = "stationary")
+#p-value = 0.01
+
+grangertest(VA_manufacturas_diff2~tcambio_dolarobs_diff2, order = 1)
+grangertest(VA_manufacturas_diff2~tcambio_dolarobs_diff2, order = 2)
+grangertest(VA_manufacturas_diff2~tcambio_dolarobs_diff2, order = 3)
+grangertest(VA_manufacturas_diff2~tcambio_dolarobs_diff2, order = 4)
+grangertest(VA_manufacturas_diff2~tcambio_dolarobs_diff2, order = 5)
+grangertest(VA_manufacturas_diff2~tcambio_dolarobs_diff2, order = 6)
+grangertest(VA_manufacturas_diff2~tcambio_dolarobs_diff2, order = 7)
+grangertest(VA_manufacturas_diff2~tcambio_dolarobs_diff2, order = 8)
+grangertest(VA_manufacturas_diff2~tcambio_dolarobs_diff2, order = 9)
+grangertest(VA_manufacturas_diff2~tcambio_dolarobs_diff2, order = 10)
+grangertest(VA_manufacturas_diff2~tcambio_dolarobs_diff2, order = 11)
+grangertest(VA_manufacturas_diff2~tcambio_dolarobs_diff2, order = 12)
+
+#Al reves
+
+grangertest(tcambio_dolarobs_diff2~VA_manufacturas_diff2, order = 1)
+grangertest(tcambio_dolarobs_diff2~VA_manufacturas_diff2, order = 2)
+grangertest(tcambio_dolarobs_diff2~VA_manufacturas_diff2, order = 3)
+grangertest(tcambio_dolarobs_diff2~VA_manufacturas_diff2, order = 4)
+grangertest(tcambio_dolarobs_diff2~VA_manufacturas_diff2, order = 5)
+grangertest(tcambio_dolarobs_diff2~VA_manufacturas_diff2, order = 6)
+grangertest(tcambio_dolarobs_diff2~VA_manufacturas_diff2, order = 7)
+grangertest(tcambio_dolarobs_diff2~VA_manufacturas_diff2, order = 8)
+grangertest(tcambio_dolarobs_diff2~VA_manufacturas_diff2, order = 9)
+grangertest(tcambio_dolarobs_diff2~VA_manufacturas_diff2, order = 10)
+grangertest(tcambio_dolarobs_diff2~VA_manufacturas_diff2, order = 11)
+grangertest(tcambio_dolarobs_diff2~VA_manufacturas_diff2, order = 12)
+
+
+# H0: El VA de servicios no es causado en el sentido de granger por el precio del cobre > 0,05
+# H1: El VA de servicios sí es causado en el sentido de granger por el precio del cobre < 0,05
+
+grangertest(VA_servicios_diff~precio_cobre_diff, order = 1)
+grangertest(VA_servicios_diff~precio_cobre_diff, order = 2)
+grangertest(VA_servicios_diff~precio_cobre_diff, order = 3)
+grangertest(VA_servicios_diff~precio_cobre_diff, order = 4)
+grangertest(VA_servicios_diff~precio_cobre_diff, order = 5)
+grangertest(VA_servicios_diff~precio_cobre_diff, order = 6)
+grangertest(VA_servicios_diff~precio_cobre_diff, order = 7)
+grangertest(VA_servicios_diff~precio_cobre_diff, order = 8)
+grangertest(VA_servicios_diff~precio_cobre_diff, order = 9)
+grangertest(VA_servicios_diff~precio_cobre_diff, order = 10)
+grangertest(VA_servicios_diff~precio_cobre_diff, order = 11)
+grangertest(VA_servicios_diff~precio_cobre_diff, order = 12)
+
+##Al reves
+grangertest(precio_cobre_diff~VA_servicios_diff, order = 1)
+##0.003794 **
+
+# H0: El VA de Minería no es causado en el sentido de granger por el precio del cobre > 0,05
+# H1: El VA de Minería sí es causado en el sentido de granger por el precio del cobre < 0,05
+
+grangertest(VA_minería_diff~precio_cobre_diff, order = 1)
+grangertest(VA_minería_diff~precio_cobre_diff, order = 2)
+grangertest(VA_minería_diff~precio_cobre_diff, order = 3)
+grangertest(VA_minería_diff~precio_cobre_diff, order = 4)
+## 1.104e-05 ***
+
+grangertest(precio_cobre_diff~VA_minería_diff, order = 1)
+#5.525e-13 ***
+
 ###PASAMOS AL MODELO VAR
 tcambio_real_diff=ts(tcambio_real_diff, start = 1985, freq = 4)
 precio_cobre_diff=ts(precio_cobre_diff, start = 1985, freq = 4)
-tasa_TPM_diff=ts(tasa_TPM_diff, start = 1985, freq = 4)
-tasa_IPC_diff=ts(tasa_IPC_diff, start = 1985, freq = 4)
+TPM_diff=ts(TPM_diff, start = 1985, freq = 4)
+IPC_diff=ts(IPC_diff, start = 1985, freq = 4)
 tcambio_dolarobs_diff=ts(tcambio_dolarobs_diff, start = 1985, freq = 4)
 tasa_captación_diff=ts(tasa_captación_diff, start = 1985, freq = 4)
 tasa_colocación_diff=ts(tasa_colocación_diff, start = 1985, freq = 4)
-tasa_IPC_acum_diff=ts(tasa_IPC_acum_diff, start = 1985, freq = 4)
+IPC_acum_diff=ts(IPC_acum_diff, start = 1985, freq = 4)
+tasa_desempleo_diff=ts(tasa_desempleo_diff, start = 1985, freq = 4)
+pib_manufacturas_diff=ts(pib_manufacturas_diff, start = 1985, freq = 4)
+pib_servicios_diff=ts(pib_servicios_diff, start = 1985, freq = 4)
+pib_minería_diff=ts(pib_minería_diff, start = 1985, freq = 4)
+VA_manufacturas_diff2=ts(VA_manufacturas_diff2, start = 1985, freq = 4)
+VA_servicios_diff=ts(VA_servicios_diff, start = 1985, freq = 4)
+VA_minería_diff=ts(VA_minería_diff, start = 1985, freq = 4)
 tipo_gob_diff=ts(tipo_gob_diff, start = 1985, freq = 4)
 crisis_ec_diff=ts(crisis_ec_diff, start = 1985, freq = 4)
   
   
-ejvar <- cbind(tcambio_real_diff, precio_cobre_diff, tasa_TPM_diff, tasa_IPC_diff)
+ejvar <- cbind(tcambio_dolarobs_diff, IPC_diff, tasa_desempleo_diff, TPM_diff, pib_manufacturas_diff, pib_servicios_diff, pib_minería_diff, precio_cobre_diff, tipo_gob_diff, crisis_ec_diff)
 ejvar
 
 VARselect(ejvar, lag.max = 12)
 
-## 2 de los criterios indican orden 1, los otros 2 indican orden 5
-# Partiremos con el orden 1
-var1 <- VAR(ejvar, p=1)
-var1
+#Los criterios indican:
+#AIC(n)  HQ(n)  SC(n) FPE(n) 
+#12      12      1     12   
 
-summary(var1)
+##Al utilizar 12 lags el VAR es tan grande que no cabe en la consola
+#Este será el VAR A, y en el orden 1, por lo tanto, var_A1
+
+var_A1 <- VAR(ejvar, p=1)
+var_A1
+
+summary(var_A1)
 ##Roots of the characteristic polynomial:
 ## 0.3095 0.2996 0.2996 0.2861
 ## Como son todas menores a 1, podemos decir que se satisface la condición 
 #de estabilidad.
 
 #Lo graficamos
-plot(var1)
+plot(var_A1)
 
 ###Haremos la prueba de autocorrelación serial en los residuales
 
 # H0: Los residuales no están correlacionados, -> p value > 0,05 Aceptar H0 -- No rechazar H0
 # H1: Los residuales si están correlacionados, -> p value < 0,05 Aceptar H1 -- Rechazar H0
 
-serialprecioycambio <- serial.test(var1, lags.pt = 1, type = "PT.asymptotic")
-serialprecioycambio$serial
+serialvar_A1 <- serial.test(var_A1, lags.pt = 1, type = "PT.asymptotic")
+serialvar_A1$serial
 
 ## en nuestro caso obtuvimos 2.2e-16, que es muy cercano a 0 y < a 0,05
 #Por ende, rechazamos la hipotesis nula, los residuales sí están correlaciondos 
@@ -820,67 +1070,90 @@ serialprecioycambio$serial
 #H0: Los residuales se distribuyen normal   (pvalue > 0,05 -> Aceptamos H0)
 #H1: Los residuales no se distribuyen normal (pvalue < 0,05 -> Rechazamos H0)
 
-normvar1=normality.test(var1)
-normvar1$jb.mul
+normvar_A1=normality.test(var_A1)
+normvar_A1$jb.mul
 
-#Sesgo -> p-value = 1.007e-10
+#Sesgo -> p-value = 2.2e-16
 #kurtosis -> p-value < 2.2e-16
 
 ##Se concluye que no hay normalidad, valores p < 0,05
 
 #Procedemos a realizar la prueba de homocedasticidad de la varianza de los residuales
 
-arch1 <- arch.test(var1, lags.multi = 1)
-
-## ME TIRÓ UN MONTON DE MENSAJES WARNING (9) DEL ESTILO: 
-
-#Warning messages:
-#1: In doTryCatch(return(expr), name, parentenv, handler) :
-# display list redraw incomplete   (ERAN TODOS IGUALES)
-
+arch_A1 <- arch.test(var_A1, lags.multi = 1)
 
 #H0: La varianza de los residuales es constante (pvalue >  0,05) 
 #H1: La varianza de los residuales no es constante (pvalue < 0,05)
 
-arch1$arch.mul
-#p-value = 0.04269, esto quiere decir que la varianza de los residuales no es constante
+arch_A1$arch.mul
+#p-value = p-value = 3.331e-16, esto quiere decir que la varianza de los residuales no es constante
 ##REVISAR
 
 ####Modelo impulso respuesta
 
-# 1° Veremos el impulso respuesta del precio del cobre, ante una innovación en las otras variables
+# 1° Veremos el impulso respuesta del tipo de cambio real, frente a variaciones de las otras variables
 
-irf_pcob=irf(var1, response ="precio_cobre_diff", n.ahead=8, boot=TRUE)
-irf_pcob
+irf_dolar_A1=irf(var_A1, response ="tcambio_dolarobs_diff", n.ahead=8, boot=TRUE)
+irf_dolar_A1
+
+plot(irf_dolar_A1)
 
 ##Este modelo impulso respuesta nos muestra como responde el precio del cobre ante 
 #un impulso de las otras variables
 # Nos lo entrega, y luego la banda baja y la banda alta del modelo con un 95% conf
 
-plot(irf_pcob)
-
-#Ahora el impulso respuesta del tipo de cambio real, frente a variaciones de las otras variables
 
 
-irf_tcamr=irf(var1, response ="tcambio_real_diff", n.ahead=8, boot=TRUE)
-irf_tcamr
-
-plot(irf_tcamr)
 
 #Ahora el impuldo respuesta de la TPM
 
 
-irf_TPM=irf(var1, response ="tasa_TPM_diff", n.ahead=8, boot=TRUE)
-irf_TPM
+irf_TPM_A1=irf(var_A1, response ="TPM_diff", n.ahead=8, boot=TRUE)
+irf_TPM_A1
 
-plot(irf_TPM)
+plot(irf_TPM_A1)
 
 #Ahora el impulso respuesta del IPC frente a innovaciones en las otras variables
 
 
-irf_IPC=irf(var1, response ="tasa_IPC_diff", n.ahead=8, boot=TRUE)
-irf_IPC
-plot(irf_IPC)
+irf_IPC_A1=irf(var_A1, response ="IPC_diff", n.ahead=8, boot=TRUE)
+irf_IPC_A1
+plot(irf_IPC_A1)
+
+#Ahora el PIB de manufacturas
+
+irf_pib_manu_A1=irf(var_A1, response ="pib_manufacturas_diff", n.ahead=8, boot=TRUE)
+irf_pib_manu_A1
+plot(irf_pib_manu_A1)
+
+#####PIB de servicios
+
+irf_pib_serv_A1=irf(var_A1, response ="pib_servicios_diff", n.ahead=8, boot=TRUE)
+irf_pib_serv_A1
+plot(irf_pib_serv_A1)
+
+#####PIB minería 
+
+
+irf_pib_min_A1=irf(var_A1, response ="pib_minería_diff", n.ahead=8, boot=TRUE)
+irf_pib_min_A1
+plot(irf_pib_min_A1)
+
+####Tasa de desempleo
+
+irf_tasa_des_A1=irf(var_A1, response ="tasa_desempleo_diff", n.ahead=8, boot=TRUE)
+irf_tasa_des_A1
+plot(irf_tasa_des_A1)
+
+
+#Ahora el impulso respuesta del precio del cobre, ante una innovación en las otras variables
+
+irf_pcob_A1=irf(var_A1, response ="precio_cobre_diff", n.ahead=8, boot=TRUE)
+irf_pcob_A1
+
+plot(irf_pcob_A1)
+
+
 
 ###Impulso respuesta acumulado
 
@@ -912,35 +1185,282 @@ DESVAR_IPC
 
 ############################
 
+var_A2 <- VAR(ejvar, p=2)
+var_A2
 
-
-#VAR 2
-
-ejvar2 <- cbind(tcambio_real_diff, precio_cobre_diff, tasa_TPM_diff, tasa_IPC_diff, tipo_gob_diff, crisis_ec_diff)
-VARselect(ejvar2, lag.max = 12)
-
-## 3 de los 4 criterios indican orden 1, 1 indica orden 5
-# Partiremos con el orden 1
-var2 <- VAR(ejvar2, p=1)
-var2
-
-summary(var2)
+summary(var_A2)
 ##Roots of the characteristic polynomial:
-## son todas menores a 1, podemos decir que se satisface la condición 
+## 0.3095 0.2996 0.2996 0.2861
+## Como son todas menores a 1, podemos decir que se satisface la condición 
 #de estabilidad.
 
 #Lo graficamos
-plot(var2)
+plot(var_A2)
 
 ###Haremos la prueba de autocorrelación serial en los residuales
 
 # H0: Los residuales no están correlacionados, -> p value > 0,05 Aceptar H0 -- No rechazar H0
 # H1: Los residuales si están correlacionados, -> p value < 0,05 Aceptar H1 -- Rechazar H0
 
-serialvar2 <- serial.test(var2, lags.pt = 1, type = "PT.asymptotic")
-serialvar2$serial
+serialvar_A2 <- serial.test(var_A2, lags.pt = 2, type = "PT.asymptotic")
+serialvar_A2$serial
 
-## Obtuvimos 2.2e-16, que es muy cercano a 0 y < a 0,05
+## 2.2e-16 Hay correlacion en los residuales
+
+###Procedemos a hacer la prueba de normaliad de los residuales
+
+## Nos vamos a fijar en los p value de la kurtosis y del sesgo (skewness)
+
+#H0: Los residuales se distribuyen normal   (pvalue > 0,05 -> Aceptamos H0)
+#H1: Los residuales no se distribuyen normal (pvalue < 0,05 -> Rechazamos H0)
+
+normvar_A2=normality.test(var_A2)
+normvar_A2$jb.mul
+
+#Sesgo -> p-value = 3.331e-16
+#kurtosis -> p-value < 2.2e-16
+
+##Se concluye que no hay normalidad, valores p < 0,05
+
+#Procedemos a realizar la prueba de homocedasticidad de la varianza de los residuales
+
+arch_A2 <- arch.test(var_A2, lags.multi = 2)
+
+#H0: La varianza de los residuales es constante (pvalue >  0,05) 
+#H1: La varianza de los residuales no es constante (pvalue < 0,05)
+
+arch_A2$arch.mul
+#p-value = 0.0006612, esto quiere decir que la varianza de los residuales no es constante
+##REVISAR
+
+####Modelo impulso respuesta
+
+# 1° Veremos el impulso respuesta del tipo de cambio real, frente a variaciones de las otras variables
+
+irf_dolar_A2=irf(var_A2, response ="tcambio_dolarobs_diff", n.ahead=8, boot=TRUE)
+irf_dolar_A2
+
+plot(irf_dolar_A1)
+
+##Este modelo impulso respuesta nos muestra como responde el precio del cobre ante 
+#un impulso de las otras variables
+# Nos lo entrega, y luego la banda baja y la banda alta del modelo con un 95% conf
+
+
+
+
+#Ahora el impuldo respuesta de la TPM
+
+
+irf_TPM_A2=irf(var_A2, response ="TPM_diff", n.ahead=8, boot=TRUE)
+irf_TPM_A2
+
+plot(irf_TPM_A2)
+
+#Ahora el impulso respuesta del IPC frente a innovaciones en las otras variables
+
+
+irf_IPC_A2=irf(var_A2, response ="IPC_diff", n.ahead=8, boot=TRUE)
+irf_IPC_A2
+plot(irf_IPC_A1)
+
+#Ahora el PIB de manufacturas
+
+irf_pib_manu_A2=irf(var_A2, response ="pib_manufacturas_diff", n.ahead=8, boot=TRUE)
+irf_pib_manu_A2
+plot(irf_pib_manu_A2)
+
+#####PIB de servicios
+
+irf_pib_serv_A2=irf(var_A2, response ="pib_servicios_diff", n.ahead=8, boot=TRUE)
+irf_pib_serv_A2
+plot(irf_pib_serv_A2)
+
+#####PIB minería 
+
+
+irf_pib_min_A2=irf(var_A2, response ="pib_minería_diff", n.ahead=8, boot=TRUE)
+irf_pib_min_A2
+plot(irf_pib_min_A2)
+
+####Tasa de desempleo
+
+irf_tasa_des_A2=irf(var_A2, response ="tasa_desempleo_diff", n.ahead=8, boot=TRUE)
+irf_tasa_des_A2
+plot(irf_tasa_des_A2)
+
+
+#Ahora el impulso respuesta del precio del cobre, ante una innovación en las otras variables
+
+irf_pcob_A2=irf(var_A2, response ="precio_cobre_diff", n.ahead=8, boot=TRUE)
+irf_pcob_A2
+
+plot(irf_pcob_A2)
+
+
+
+
+
+############################
+
+var_A3 <- VAR(ejvar, p=3)
+var_A3
+
+summary(var_A3)
+##Roots of the characteristic polynomial:
+## 0.3095 0.2996 0.2996 0.2861
+## Como son todas menores a 1, podemos decir que se satisface la condición 
+#de estabilidad.
+
+#Lo graficamos
+plot(var_A3)
+
+###Haremos la prueba de autocorrelación serial en los residuales
+
+# H0: Los residuales no están correlacionados, -> p value > 0,05 Aceptar H0 -- No rechazar H0
+# H1: Los residuales si están correlacionados, -> p value < 0,05 Aceptar H1 -- Rechazar H0
+
+serialvar_A3 <- serial.test(var_A3, lags.pt = 3, type = "PT.asymptotic")
+serialvar_A3$serial
+
+## p-value < 2.2e-16
+
+#Existe correlación en los residuales
+
+###Procedemos a hacer la prueba de normaliad de los residuales
+
+## Nos vamos a fijar en los p value de la kurtosis y del sesgo (skewness)
+
+#H0: Los residuales se distribuyen normal   (pvalue > 0,05 -> Aceptamos H0)
+#H1: Los residuales no se distribuyen normal (pvalue < 0,05 -> Rechazamos H0)
+
+normvar_A3=normality.test(var_A3)
+normvar_A3$jb.mul
+
+#Sesgo -> p-value = 3.302e-11
+#kurtosis -> p-value < 2.2e-16
+
+##Se concluye que no hay normalidad, valores p < 0,05
+
+#Procedemos a realizar la prueba de homocedasticidad de la varianza de los residuales
+
+arch_A3 <- arch.test(var_A3, lags.multi = 3)
+
+#H0: La varianza de los residuales es constante (pvalue >  0,05) 
+#H1: La varianza de los residuales no es constante (pvalue < 0,05)
+
+arch_A3$arch.mul
+#p-value = 1 
+
+####Modelo impulso respuesta
+
+# 1° Veremos el impulso respuesta del tipo de cambio real, frente a variaciones de las otras variables
+
+irf_dolar_A3=irf(var_A3, response ="tcambio_dolarobs_diff", n.ahead=8, boot=TRUE)
+irf_dolar_A3
+
+plot(irf_dolar_A3)
+
+##Este modelo impulso respuesta nos muestra como responde el valor del dolar ante 
+#un impulso de las otras variables
+# Nos lo entrega, y luego la banda baja y la banda alta del modelo con un 95% conf
+
+#Ahora el impulso respuesta de la TPM
+
+
+irf_TPM_A3=irf(var_A3, response ="TPM_diff", n.ahead=8, boot=TRUE)
+irf_TPM_A3
+
+plot(irf_TPM_A3)
+
+#Ahora el impulso respuesta del IPC frente a innovaciones en las otras variables
+
+
+irf_IPC_A3=irf(var_A3, response ="IPC_diff", n.ahead=8, boot=TRUE)
+irf_IPC_A3
+plot(irf_IPC_A3)
+
+#Ahora el PIB de manufacturas
+
+irf_pib_manu_A3=irf(var_A3, response ="pib_manufacturas_diff", n.ahead=8, boot=TRUE)
+irf_pib_manu_A3
+plot(irf_pib_manu_A3)
+
+#####PIB de servicios
+
+irf_pib_serv_A3=irf(var_A3, response ="pib_servicios_diff", n.ahead=8, boot=TRUE)
+irf_pib_serv_A3
+plot(irf_pib_serv_A3)
+
+#####PIB minería 
+
+
+irf_pib_min_A3=irf(var_A3, response ="pib_minería_diff", n.ahead=8, boot=TRUE)
+irf_pib_min_A3
+plot(irf_pib_min_A3)
+
+####Tasa de desempleo
+
+irf_tasa_des_A3=irf(var_A3, response ="tasa_desempleo_diff", n.ahead=8, boot=TRUE)
+irf_tasa_des_A3
+plot(irf_tasa_des_A3)
+
+
+#Ahora el impulso respuesta del precio del cobre, ante una innovación en las otras variables
+
+irf_pcob_A3=irf(var_A3, response ="precio_cobre_diff", n.ahead=8, boot=TRUE)
+irf_pcob_A3
+
+plot(irf_pcob_A3)
+
+#####
+
+#VARB -> Utiliza valor agregado sectorial en vez de pib 
+
+ejvar2 <- cbind(tcambio_dolarobs_diff, IPC_diff, tasa_desempleo_diff, TPM_diff, VA_manufacturas_diff2, VA_servicios_diff, VA_minería_diff, precio_cobre_diff, tipo_gob_diff, crisis_ec_diff)
+ejvar2
+
+
+VARselect(ejvar2, lag.max = 12)
+
+
+ejvar$lag3_pib_servicios<- Lag(ejvar$pib_servicios_diff, +3)
+ejvar
+
+ejvar<-data.frame(ejvar)
+
+grangertest(VA_manufacturas_diff~tcambio_dolarobs_diff, order = 1)
+
+
+  
+#Los criterios indican:
+#AIC(n)  HQ(n)  SC(n) FPE(n) 
+#12      12      1     12   
+
+##Al utilizar 12 lags el VAR es tan grande que no cabe en la consola
+#Este será el VAR A, y en el orden 1, por lo tanto, var_A1
+
+var_A1 <- VAR(ejvar, p=1)
+var_A1
+
+summary(var_A1)
+##Roots of the characteristic polynomial:
+## 0.3095 0.2996 0.2996 0.2861
+## Como son todas menores a 1, podemos decir que se satisface la condición 
+#de estabilidad.
+
+#Lo graficamos
+plot(var_A1)
+
+###Haremos la prueba de autocorrelación serial en los residuales
+
+# H0: Los residuales no están correlacionados, -> p value > 0,05 Aceptar H0 -- No rechazar H0
+# H1: Los residuales si están correlacionados, -> p value < 0,05 Aceptar H1 -- Rechazar H0
+
+serialvar_A1 <- serial.test(var_A1, lags.pt = 1, type = "PT.asymptotic")
+serialvar_A1$serial
+
+## en nuestro caso obtuvimos 2.2e-16, que es muy cercano a 0 y < a 0,05
 #Por ende, rechazamos la hipotesis nula, los residuales sí están correlaciondos 
 #Hay presencia de correlación serial
 
@@ -952,175 +1472,92 @@ serialvar2$serial
 #H0: Los residuales se distribuyen normal   (pvalue > 0,05 -> Aceptamos H0)
 #H1: Los residuales no se distribuyen normal (pvalue < 0,05 -> Rechazamos H0)
 
-normvar2=normality.test(var2)
-normvar2$jb.mul
+normvar_A1=normality.test(var_A1)
+normvar_A1$jb.mul
 
-#Sesgo -> p-value = 4.932e-13
+#Sesgo -> p-value = 2.2e-16
 #kurtosis -> p-value < 2.2e-16
 
 ##Se concluye que no hay normalidad, valores p < 0,05
 
 #Procedemos a realizar la prueba de homocedasticidad de la varianza de los residuales
 
-arch2 <- arch.test(var2, lags.multi = 1)
-
-## ME TIRÓ UN MONTON DE MENSAJES WARNING (9) DEL ESTILO: 
-
-#Warning messages:
-#1: In doTryCatch(return(expr), name, parentenv, handler) :
-# display list redraw incomplete   (ERAN TODOS IGUALES)
-
+arch_A1 <- arch.test(var_A1, lags.multi = 1)
 
 #H0: La varianza de los residuales es constante (pvalue >  0,05) 
 #H1: La varianza de los residuales no es constante (pvalue < 0,05)
 
-arch2$arch.mul
-#p-value = 4.552e-08, esto quiere decir que la varianza de los residuales no es constante
+arch_A1$arch.mul
+#p-value = p-value = 3.331e-16, esto quiere decir que la varianza de los residuales no es constante
 ##REVISAR
 
 ####Modelo impulso respuesta
 
-# 1° Veremos el impulso respuesta del precio del cobre, ante una innovación en las otras variables
+# 1° Veremos el impulso respuesta del tipo de cambio real, frente a variaciones de las otras variables
 
-irf_2pcob=irf(var2, response ="precio_cobre_diff", n.ahead=8, boot=TRUE)
-irf_2pcob
+irf_dolar_A1=irf(var_A1, response ="tcambio_dolarobs_diff", n.ahead=8, boot=TRUE)
+irf_dolar_A1
+
+plot(irf_dolar_A1)
 
 ##Este modelo impulso respuesta nos muestra como responde el precio del cobre ante 
 #un impulso de las otras variables
 # Nos lo entrega, y luego la banda baja y la banda alta del modelo con un 95% conf
 
-plot(irf_2pcob)
-
-#Ahora el impulso respuesta del tipo de cambio real, frente a variaciones de las otras variables
 
 
-irf_2tcamr=irf(var2, response ="tcambio_real_diff", n.ahead=8, boot=TRUE)
-irf_2tcamr
 
-plot(irf_2tcamr)
-
-#Ahora el impulso respuesta de la TPM
+#Ahora el impuldo respuesta de la TPM
 
 
-irf_2TPM=irf(var2, response ="tasa_TPM_diff", n.ahead=8, boot=TRUE)
-irf_2TPM
+irf_TPM_A1=irf(var_A1, response ="TPM_diff", n.ahead=8, boot=TRUE)
+irf_TPM_A1
 
-plot(irf_2TPM)
+plot(irf_TPM_A1)
 
 #Ahora el impulso respuesta del IPC frente a innovaciones en las otras variables
 
 
-irf_2IPC=irf(var2, response ="tasa_IPC_diff", n.ahead=8, boot=TRUE)
-irf_2IPC
-plot(irf_2IPC)
+irf_IPC_A1=irf(var_A1, response ="IPC_diff", n.ahead=8, boot=TRUE)
+irf_IPC_A1
+plot(irf_IPC_A1)
+
+#Ahora el PIB de manufacturas
+
+irf_pib_manu_A1=irf(var_A1, response ="pib_manufacturas_diff", n.ahead=8, boot=TRUE)
+irf_pib_manu_A1
+plot(irf_pib_manu_A1)
+
+#####PIB de servicios
+
+irf_pib_serv_A1=irf(var_A1, response ="pib_servicios_diff", n.ahead=8, boot=TRUE)
+irf_pib_serv_A1
+plot(irf_pib_serv_A1)
+
+#####PIB minería 
 
 
-#VAR 3 #### QUERIAMOS HACER UN VAR CON LA TPM SIN DIFERENCIAR, EL DICKEY FULLER
-##FUE DE 0,04, PERO AL INTENTARLO OBTENEMOS UN ERROR: NAs in y.
+irf_pib_min_A1=irf(var_A1, response ="pib_minería_diff", n.ahead=8, boot=TRUE)
+irf_pib_min_A1
+plot(irf_pib_min_A1)
 
-ejvar3 <- cbind(tcambio_real_diff, precio_cobre_diff, tasa_TPM, tasa_IPC_diff, tipo_gob_diff, crisis_ec_diff)
-VARselect(ejvar3, lag.max = 12)
+####Tasa de desempleo
 
-#####
+irf_tasa_des_A1=irf(var_A1, response ="tasa_desempleo_diff", n.ahead=8, boot=TRUE)
+irf_tasa_des_A1
+plot(irf_tasa_des_A1)
 
-#VAR 4 ##Se repite VAR1 pero con mas rezagos
+
+#Ahora el impulso respuesta del precio del cobre, ante una innovación en las otras variables
+
+irf_pcob_A1=irf(var_A1, response ="precio_cobre_diff", n.ahead=8, boot=TRUE)
+irf_pcob_A1
+
+plot(irf_pcob_A1)
+
 
 # VARSELECT indica orden 5
  
-var4 <- VAR(ejvar2, p=5)
-var4
-
-summary(var4)
-##Roots of the characteristic polynomial:
-## son todas menores a 1, podemos decir que se satisface la condición 
-#de estabilidad.
-
-#Lo graficamos
-plot(var4)
-
-###Haremos la prueba de autocorrelación serial en los residuales
-
-# H0: Los residuales no están correlacionados, -> p value > 0,05 Aceptar H0 -- No rechazar H0
-# H1: Los residuales si están correlacionados, -> p value < 0,05 Aceptar H1 -- Rechazar H0
-
-serialvar4 <- serial.test(var4, lags.pt = 1, type = "PT.asymptotic")
-serialvar4$serial
-#Obtenemos : Warning messages:
-#1: In pchisq(STATISTIC, df = PARAMETER) : NaNs produced
-#2: In pchisq(STATISTIC, df = PARAMETER) : NaNs produced
-
-#El test de premanteau dio:
-
-## p-value = NA
-
-###Procedemos a hacer la prueba de normaliad de los residuales
-
-## Nos vamos a fijar en los p value de la kurtosis y del sesgo (skewness)
-
-#H0: Los residuales se distribuyen normal   (pvalue > 0,05 -> Aceptamos H0)
-#H1: Los residuales no se distribuyen normal (pvalue < 0,05 -> Rechazamos H0)
-
-normvar4=normality.test(var4)
-normvar4$jb.mul
-
-#Sesgo -> p-value = 3.403e-09
-#kurtosis -> p-value < 2.2e-16
-
-##Se concluye que no hay normalidad, valores p < 0,05
-
-#Procedemos a realizar la prueba de homocedasticidad de la varianza de los residuales
-
-arch4 <- arch.test(var4, lags.multi = 5)
-
-## ME TIRÓ UN MONTON DE MENSAJES WARNING (9) DEL ESTILO: 
-
-#Warning messages:
-#1: In doTryCatch(return(expr), name, parentenv, handler) :
-# display list redraw incomplete   (ERAN TODOS IGUALES)
-
-
-#H0: La varianza de los residuales es constante (pvalue >  0,05) 
-#H1: La varianza de los residuales no es constante (pvalue < 0,05)
-
-arch4$arch.mul
-#p-value = 0.3149, esto quiere decir que la varianza de los residuales sí es constante
-##YIIIIEI
-
-####Modelo impulso respuesta
-
-# 1° Veremos el impulso respuesta del precio del cobre, ante una innovación en las otras variables
-
-irf_4pcob=irf(var4, response ="precio_cobre_diff", n.ahead=8, boot=TRUE)
-irf_4pcob
-
-##Este modelo impulso respuesta nos muestra como responde el precio del cobre ante 
-#un impulso de las otras variables
-# Nos lo entrega, y luego la banda baja y la banda alta del modelo con un 95% conf
-
-plot(irf_4pcob)
-
-#Ahora el impulso respuesta del tipo de cambio real, frente a variaciones de las otras variables
-
-
-irf_4tcamr=irf(var4, response ="tcambio_real_diff", n.ahead=8, boot=TRUE)
-irf_4tcamr
-
-plot(irf_4tcamr)
-
-#Ahora el impulso respuesta de la TPM
-
-
-irf_4TPM=irf(var4, response ="tasa_TPM_diff", n.ahead=8, boot=TRUE)
-irf_4TPM
-
-plot(irf_4TPM)
-
-#Ahora el impulso respuesta del IPC frente a innovaciones en las otras variables
-
-
-irf_4IPC=irf(var4, response ="tasa_IPC_diff", n.ahead=8, boot=TRUE)
-irf_4IPC
-plot(irf_2IPC)
 
 
 ############ EL MODELO VAR (VAR REDUCIDO) NO TIENE EN CUENTA LA DEPENDENCIA ACTUAL, 
