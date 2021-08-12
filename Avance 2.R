@@ -169,7 +169,7 @@ ndiffs(crisis_ec)
 
 
 ### RESULTADOS: LA MAYORÍA REQUIERE PRIMERA DIFERENCIA, EL PIB SERVICIOS
-#NECESITA 2
+#NECESITA 2, crisis 0
 
 ####### Diferencias
 
@@ -195,6 +195,23 @@ crisis_ec_diff=diff(crisis_ec)
 ndiffs(pib_servicios_diff)
 ##Aún falta una diferencia
 pib_servicios_diff2=diff(pib_servicios_diff)
+
+
+##Creo una base en data frame con las variables diferenciadas
+##Elimino los NA
+
+Base_datos2 <- cbind(tcambio_real_diff, tcambio_dolarobs_diff, IPC_diff, IPC_acum_diff, tasa_desempleo_diff, TPM_diff, pib_manufacturas_diff, pib_servicios_diff2, pib_minería_diff, VA_manufacturas_diff, VA_servicios_diff, VA_minería_diff, precio_cobre_diff, tipo_gob_diff, crisis_ec)
+
+Base_datos2<-data.frame(Base_datos2)
+
+Base_datos2$nuevo_pib_servicios_diff2<- Lag(Base_datos2$pib_servicios_diff2, -1)
+ejvar
+
+grangertest(VA_manufacturas_diff~tcambio_dolarobs_diff, order = 1)
+
+
+
+
 
 
 #Prueba de Dickey Fuller
