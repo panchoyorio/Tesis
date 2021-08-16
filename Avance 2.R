@@ -119,7 +119,7 @@ plot(cbind(VA_manufacturas, pib_manufacturas), main="Valor Añadido - Pib Manufa
 plot(cbind(VA_manufacturas, VA_minería), main="Valor Añadido Manufacturas - Minería", col="blue")
 ts.plot(precio_cobre, VA_manufacturas, main="Precio del Cobre - Valor Añadido Manufacturas", col=c( "blue", "red"))
 ts.plot(VA_minería, VA_manufacturas, main="Valor Añadido Minería - Manufacturas", col=c( "blue", "red"))
-
+ts.plot(tcambio_real, precio_cobre)
 
 ### Gráficos estacionales para el tipo de cambio real, la TPM, y el precio del cobre
 
@@ -511,8 +511,9 @@ pacf(VA_minería_diff, main="Función de Auto Correlación Parcial")
 #acf(ts(precio_cobre_diff, frequency=1))
 #pacf(ts(precio_cobre_diff, frequency=1))
 
-#Para graficar
-par(mfrow=c(1,1), mar=c(3,3,3,1) + .1)
+
+
+
 
 
 
@@ -1568,6 +1569,10 @@ summary(var_A1)
 #de estabilidad.
 
 #Lo graficamos
+#Para graficar
+par(mfrow=c(1,1), mar=c(3,3,3,1) + .1)
+
+
 plot(var_A1)
 
 ###Haremos la prueba de autocorrelación serial en los residuales
@@ -1612,10 +1617,8 @@ arch_A1$arch.mul
 ####Modelo impulso respuesta
 
 # 1° Veremos el impulso respuesta del tipo de cambio real, frente a variaciones de las otras variables
-
-irf_dolar_A1=irf(var_A1, impulse = "precio_cobre_diff", response ="tcambio_dolarobs_diff", n.ahead=12, boot=TRUE)
+irf_dolar_A1= irf(var_A1, impulse = "precio_cobre_diff", response ="tcambio_dolarobs_diff", n.ahead=12, boot=TRUE)
 irf_dolar_A1
-
 plot(irf_dolar_A1, main="Función Impulso Respuesta, Precio del Cobre - Dolar Observado (VAR A1)")
 
 ##Este modelo impulso respuesta nos muestra como responde el precio del cobre ante 
@@ -1684,7 +1687,7 @@ plot(irf_pcob_A1, main="Función Impulso Respuesta, Precio del Cobre - Precio de
 
 #Descompocición de la varianza ante una innovación en el precio del cobre
 #(le estamos pidiendo 50 observaciones hacia adelante como pronostico)
-#DESVAR_pcob=fevd(var1, n.ahead=50)$precio_cobre_diff
+#DESVAR_pcob=fevd(var_A1, n.ahead=12)$precio_cobre_diff
 #DESVAR_pcob
 
 #Descompocición de la varianza ante una innovación en el tipo de cambio real
@@ -1919,13 +1922,13 @@ plot(irf_dolar_A3, main="Función Impulso Respuesta, Precio del Cobre - Dolar Ob
 #un impulso de las otras variables
 # Nos lo entrega, y luego la banda baja y la banda alta del modelo con un 95% conf
 
-
+?irf
 
 
 #Ahora el impuldo respuesta de la TPM
 
 
-irf_IPC_acum_A3=irf(var_A3, impulse = "precio_cobre_diff", response ="IPC_acum_diff", n.ahead=12, boot=TRUE)
+irf_IPC_acum_A3=irf(var_A3, impulse = "precio_cobre_diff", response ="IPC_acum_diff", n.ahead=12, boot=TRUE, ci = 0.95)
 irf_IPC_acum_A3
 
 plot(irf_IPC_acum_A3, main="Función Impulso Respuesta, Precio del Cobre - IPC Variación Anual (VAR A3)")
@@ -1974,13 +1977,13 @@ plot(irf_precio_cobre_A3, main="Función Impulso Respuesta, Precio del Cobre - P
 
 ###########################################################
 
-ejvarB1- cbind(precio_cobre_diff, tcambio_dolarobs_diff, IPC_diff, tasa_desempleo_diff, TPM_diff, VA_manufacturas_diff2, VA_servicios_diff, VA_minería_diff, tipo_gob_diff, crisis_ec_diff)
+ejvarB1= cbind(precio_cobre_diff, tcambio_dolarobs_diff, IPC_diff, tasa_desempleo_diff, TPM_diff, VA_manufacturas_diff2, VA_servicios_diff, VA_minería_diff, tipo_gob_diff, crisis_ec_diff)
 ejvarB1
-VARselect(ejvarB1 ax = 4)
+VARselect(ejvarA3, lag.max = 3)
 #AIC(n)  HQ(n)  SC(n) FPE(n) 
 #3      1      1      3 
 
-var_B1 <- VAR(ejvar2, p=3)
+var_B1 <- VAR(ejvarB1, p=3)
 var_B1
 
 
@@ -2033,79 +2036,77 @@ arch_B1$arch.mul
 
 # 1° Veremos el impulso respuesta del tipo de cambio real, frente a variaciones de las otras variables
 
-irf_dolar_B1=irf(var_B1, response ="tcambio_dolarobs_diff", n.ahead=12, boot=TRUE)
+irf_dolar_B1=irf(var_B1, impulse = "precio_cobre_diff", response ="tcambio_dolarobs_diff", n.ahead=12, boot=TRUE)
 irf_dolar_B1
 
-plot(irf_dolar_B1)
+plot(irf_dolar_B1, main="Función Impulso Respuesta, Precio del Cobre - Dolar Observado (VAR B1)")
 
 ##Este modelo impulso respuesta nos muestra como responde el precio del cobre ante 
 #un impulso de las otras variables
 # Nos lo entrega, y luego la banda baja y la banda alta del modelo con un 95% conf
 
 
+#Ahora el impulso respuesta del IPC frente a innovaciones en las otras variables
 
+irf_IPC_B1=irf(var_B1, impulse = "precio_cobre_diff", response ="IPC_diff", n.ahead=12, boot=TRUE)
+irf_IPC_B1
+plot(irf_IPC_B1, main="Función Impulso Respuesta, Precio del Cobre - IPC (VAR B1)")
 
 #Ahora el impuldo respuesta de la TPM
 
-
-irf_TPM_B1=irf(var_B1, response ="TPM_diff", n.ahead=12, boot=TRUE)
+irf_TPM_B1=irf(var_B1, impulse = "precio_cobre_diff", response ="TPM_diff", n.ahead=12, boot=TRUE)
 irf_TPM_B1
 
-plot(irf_TPM_B1)
-
-#Ahora el impulso respuesta del IPC frente a innovaciones en las otras variables
+plot(irf_TPM_B1, main="Función Impulso Respuesta, Precio del Cobre - TPM (VAR B1)")
 
 
-irf_IPC_B1=irf(var_B1, response ="IPC_diff", n.ahead=12, boot=TRUE)
-irf_IPC_B1
-plot(irf_IPC_B1)
 
 #Ahora el PIB de manufacturas
 
-irf_va_manu_B1=irf(var_B1, response ="VA_manufacturas_diff2", n.ahead=12, boot=TRUE)
+irf_va_manu_B1=irf(var_B1, impulse = "precio_cobre_diff", response ="VA_manufacturas_diff2", n.ahead=12, boot=TRUE)
 irf_va_manu_B1
-plot(irf_va_manu_B1)
+plot(irf_va_manu_B1, main="Función Impulso Respuesta, Precio del Cobre - Valor Añadido Manufacturas (%PIB) (VAR B1)")
 
 #####PIB de servicios
 
-irf_va_serv_B1=irf(var_B1, response ="VA_servicios_diff", n.ahead=12, boot=TRUE)
+irf_va_serv_B1=irf(var_B1, impulse = "precio_cobre_diff", response ="VA_servicios_diff", n.ahead=12, boot=TRUE)
 irf_va_serv_B1
-plot(irf_va_serv_B1)
+plot(irf_va_serv_B1, main="Función Impulso Respuesta, Precio del Cobre - Valor Añadido Servicios (%PIB) (VAR B1)")
 
 #####PIB minería 
 
 
-irf_va_min_B1=irf(var_B1, response ="VA_minería_diff", n.ahead=12, boot=TRUE)
+irf_va_min_B1=irf(var_B1, impulse = "precio_cobre_diff", response ="VA_minería_diff", n.ahead=12, boot=TRUE)
 irf_va_min_B1
-plot(irf_pib_min_B1)
+plot(irf_va_min_B1, main="Función Impulso Respuesta, Precio del Cobre - Valor Añadido Minería (%PIB) (VAR B1)")
 
 ####Tasa de desempleo
 
-irf_tasa_des_B1=irf(var_B1, response ="tasa_desempleo_diff", n.ahead=12, boot=TRUE, impulse = "precio_cobre_diff")
+irf_tasa_des_B1=irf(var_B1, impulse = "precio_cobre_diff", response ="tasa_desempleo_diff", n.ahead=12, boot=TRUE)
 irf_tasa_des_B1
 
-plot(irf_tasa_des_B1)
+plot(irf_tasa_des_B1, main="Función Impulso Respuesta, Precio del Cobre - Tasa de Desempleo (VAR B1)")
 
 
 #Ahora el impulso respuesta del precio del cobre, ante una innovación en las otras variables
 
-irf_pcob_B1=irf(var_B1, response ="precio_cobre_diff", n.ahead=12, boot=TRUE)
+irf_pcob_B1=irf(var_B1, impulse = "precio_cobre_diff", response ="precio_cobre_diff", n.ahead=12, boot=TRUE)
 irf_pcob_B1
 
-plot(irf_pcob_B1)
+plot(irf_pcob_B1, main="Función Impulso Respuesta, Precio del Cobre - Precio del Cobre (VAR B1)")
 
 
 
 ############################
 
-ejvar3 <- cbind(precio_cobre_diff, tcambio_real_diff, IPC_diff, tasa_desempleo_diff, TPM_diff, VA_manufacturas_diff2, VA_servicios_diff, VA_minería_diff, tipo_gob_diff, crisis_ec_diff)
-ejvar3
-VARselect(ejvar3, lag.max = 3)
+ejvarB2 <- cbind(precio_cobre_diff, tcambio_real_diff, IPC_diff, tasa_desempleo_diff, TPM_diff, VA_manufacturas_diff2, VA_servicios_diff, VA_minería_diff, tipo_gob_diff, crisis_ec_diff)
+ejvarB2
+VARselect(ejvarB2, lag.max = 3)
 #AIC(n)  HQ(n)  SC(n) FPE(n) 
 #3      1      1      3 
 
 
-var_B2 <- VAR(ejvar3, p=3)
+var_B2 <- VAR(ejvarB2, p=3)
 var_B2
 
 summary(var_B2)
@@ -2160,14 +2161,22 @@ arch_B2$arch.mul
 
 # 1° Veremos el impulso respuesta del tipo de cambio real, frente a variaciones de las otras variables
 
-irf_dolar_B2=irf(var_B2, response ="tcambio_real_diff", n.ahead=12, boot=TRUE)
+irf_dolar_B2=irf(var_B2, impulse = "precio_cobre_diff", response ="tcambio_real_diff", n.ahead=12, boot=TRUE)
 irf_dolar_B2
 
-plot(irf_dolar_B2)
+plot(irf_dolar_B2, main="Función Impulso Respuesta, Precio del Cobre - Tipo de Cambio Real (VAR B2)")
 
 ##Este modelo impulso respuesta nos muestra como responde el valor del dolar ante 
 #un impulso de las otras variables
 # Nos lo entrega, y luego la banda baja y la banda alta del modelo con un 95% conf
+
+#Ahora el impulso respuesta del IPC frente a innovaciones en las otras variables
+
+
+irf_IPC_B2=irf(var_B2, impulse = "precio_cobre_diff", response ="IPC_diff", n.ahead=12, boot=TRUE)
+irf_IPC_B2
+plot(irf_IPC_B2, main="Función Impulso Respuesta, Precio del Cobre - IPC (VAR B2)")
+
 
 #Ahora el impulso respuesta de la TPM
 
@@ -2175,50 +2184,168 @@ plot(irf_dolar_B2)
 irf_TPM_B2=irf(var_B2, impulse = "precio_cobre_diff", response ="TPM_diff", n.ahead=12, boot=TRUE)
 irf_TPM_B2
 
-plot(irf_TPM_B2)
-
-#Ahora el impulso respuesta del IPC frente a innovaciones en las otras variables
+plot(irf_TPM_B2, main="Función Impulso Respuesta, Precio del Cobre - TPM (VAR B2)")
 
 
-irf_IPC_B2=irf(var_B2, impulse = "precio_cobre_diff", response ="IPC_diff", n.ahead=12, boot=TRUE)
-irf_IPC_B2
-plot(irf_IPC_B2)
 
 #Ahora el PIB de manufacturas
 
 irf_va_manu_B2=irf(var_B2, impulse = "precio_cobre_diff", response ="VA_manufacturas_diff2", n.ahead=12, boot=TRUE)
 irf_va_manu_B2
-plot(irf_va_manu_B2)
+plot(irf_va_manu_B2, main="Función Impulso Respuesta, Precio del Cobre - Valor Añadido Manufacturas (%PIB) (VAR B2)")
 
 #####PIB de servicios
 
 irf_va_serv_B2=irf(var_B2, impulse = "precio_cobre_diff", response ="VA_servicios_diff", n.ahead=12, boot=TRUE)
 irf_va_serv_B2
-plot(irf_va_serv_B2)
+plot(irf_va_serv_B2, main="Función Impulso Respuesta, Precio del Cobre - Valor Añadido Servicios (%PIB) (VAR B2)")
 
 #####PIB minería 
 
 
 irf_va_min_B2=irf(var_B2, impulse = "precio_cobre_diff", response ="VA_minería_diff", n.ahead=12, boot=TRUE)
 irf_va_min_B2
-plot(irf_va_min_B2)
+plot(irf_va_min_B2, main="Función Impulso Respuesta, Precio del Cobre - Valor Añadido Minería (%PIB) (VAR B2)")
 
 ####Tasa de desempleo
 
 irf_tasa_des_B2=irf(var_B2, impulse = "precio_cobre_diff", response ="tasa_desempleo_diff", n.ahead=12, boot=TRUE)
 irf_tasa_des_B2
-plot(irf_tasa_des_B2)
+plot(irf_tasa_des_B2, main="Función Impulso Respuesta, Precio del Cobre - Tasa de Desempleo (VAR B2)")
 
 
 #Ahora el impulso respuesta del precio del cobre, ante una innovación en las otras variables
 
 irf_precio_cobre_B2=irf(var_B2, impulse = "precio_cobre_diff", response ="precio_cobre_diff", n.ahead=12, boot=TRUE)
 irf_precio_cobre_B2
-plot(irf_precio_cobre_B2)
+plot(irf_precio_cobre_B2, main="Función Impulso Respuesta, Precio del Cobre - Precio del Cobre (VAR B2)")
 
 
-#####
+#####################################################
 
+
+
+
+ejvarB3 <- cbind(precio_cobre_diff, tcambio_dolarobs_diff, IPC_acum_diff, tasa_desempleo_diff, TPM_diff, VA_manufacturas_diff2, VA_servicios_diff, VA_minería_diff, tipo_gob_diff, crisis_ec_diff)
+ejvarB3
+VARselect(ejvarB3, lag.max = 3)
+#AIC(n)  HQ(n)  SC(n) FPE(n) 
+#3      1      1      3 
+
+
+var_B3 <- VAR(ejvarB3, p=3)
+var_B3
+
+summary(var_B3)
+##Roots of the characteristic polynomial:
+## 0.3095 0.2996 0.2996 0.2861
+## Como son todas menores a 1, podemos decir que se satisface la condición 
+#de estabilidad.
+
+#Lo graficamos
+plot(var_B3)
+
+###Haremos la prueba de autocorrelación serial en los residuales
+
+# H0: Los residuales no están correlacionados, -> p value > 0,05 Aceptar H0 -- No rechazar H0
+# H1: Los residuales si están correlacionados, -> p value < 0,05 Aceptar H1 -- Rechazar H0
+
+serialvar_B3 <- serial.test(var_B3, lags.pt = 3, type = "PT.asymptotic")
+serialvar_B3$serial
+
+## p-value < 2.2e-16
+
+#Existe correlación en los residuales
+
+###Procedemos a hacer la prueba de normaliad de los residuales
+
+## Nos vamos a fijar en los p value de la kurtosis y del sesgo (skewness)
+
+#H0: Los residuales se distribuyen normal   (pvalue > 0,05 -> Aceptamos H0)
+#H1: Los residuales no se distribuyen normal (pvalue < 0,05 -> Rechazamos H0)
+
+normvar_B3=normality.test(var_B3)
+normvar_B3$jb.mul
+
+#Sesgo -> p-value = 7.499e-07
+
+
+#kurtosis -> p-value < 2.2e-16
+
+##Se concluye que no hay normalidad, valores p < 0,05
+
+#Procedemos a realizar la prueba de homocedasticidad de la varianza de los residuales
+
+arch_B3 <- arch.test(var_B3, lags.multi = 3)
+
+#H0: La varianza de los residuales es constante (pvalue >  0,05) 
+#H1: La varianza de los residuales no es constante (pvalue < 0,05)
+
+arch_B3$arch.mul
+#p-value = 1 
+
+####Modelo impulso respuesta
+
+# 1° Veremos el impulso respuesta del tipo de cambio real, frente a variaciones de las otras variables
+
+irf_dolar_B3=irf(var_B3, impulse = "precio_cobre_diff", response ="tcambio_dolarobs_diff", n.ahead=12, boot=TRUE)
+irf_dolar_B3
+
+plot(irf_dolar_B3, main="Función Impulso Respuesta, Precio del Cobre - Dolar Observado (VAR B3)")
+
+##Este modelo impulso respuesta nos muestra como responde el valor del dolar ante 
+#un impulso de las otras variables
+# Nos lo entrega, y luego la banda baja y la banda alta del modelo con un 95% conf
+
+#Ahora el impulso respuesta del IPC frente a innovaciones en las otras variables
+
+
+irf_IPC_B3=irf(var_B3, impulse = "precio_cobre_diff", response ="IPC_acum_diff", n.ahead=12, boot=TRUE)
+irf_IPC_B3
+plot(irf_IPC_B3, main="Función Impulso Respuesta, Precio del Cobre - IPC Variación Anual (VAR B3)")
+
+
+#Ahora el impulso respuesta de la TPM
+
+
+irf_TPM_B3=irf(var_B3, impulse = "precio_cobre_diff", response ="TPM_diff", n.ahead=12, boot=TRUE)
+irf_TPM_B3
+
+plot(irf_TPM_B3, main="Función Impulso Respuesta, Precio del Cobre - TPM (VAR B3)")
+
+
+
+#Ahora el VA de manufacturas
+
+irf_va_manu_B3=irf(var_B3, impulse = "precio_cobre_diff", response ="VA_manufacturas_diff2", n.ahead=12, boot=TRUE)
+irf_va_manu_B3
+plot(irf_va_manu_B3, main="Función Impulso Respuesta, Precio del Cobre - Valor Añadido Manufacturas (%PIB) (VAR B3)")
+
+#####PIB de servicios
+
+irf_va_serv_B3=irf(var_B3, impulse = "precio_cobre_diff", response ="VA_servicios_diff", n.ahead=12, boot=TRUE)
+irf_va_serv_B3
+plot(irf_va_serv_B3, main="Función Impulso Respuesta, Precio del Cobre - Valor Añadido Servicios (%PIB) (VAR B3)")
+
+#####PIB minería 
+
+
+irf_va_min_B3=irf(var_B3, impulse = "precio_cobre_diff", response ="VA_minería_diff", n.ahead=12, boot=TRUE)
+irf_va_min_B3
+plot(irf_va_min_B3, main="Función Impulso Respuesta, Precio del Cobre - Valor Añadido Minería (%PIB) (VAR B3)")
+
+####Tasa de desempleo
+
+irf_tasa_des_B3=irf(var_B3, impulse = "precio_cobre_diff", response ="tasa_desempleo_diff", n.ahead=12, boot=TRUE)
+irf_tasa_des_B3
+plot(irf_tasa_des_B3, main="Función Impulso Respuesta, Precio del Cobre - Tasa de Desempleo (VAR B3)")
+
+
+#Ahora el impulso respuesta del precio del cobre, ante una innovación en las otras variables
+
+irf_precio_cobre_B3=irf(var_B3, impulse = "precio_cobre_diff", response ="precio_cobre_diff", n.ahead=12, boot=TRUE)
+irf_precio_cobre_B3
+plot(irf_precio_cobre_B3, main="Función Impulso Respuesta, Precio del Cobre - Precio del Cobre (VAR B3)")
 
 
 
@@ -2382,7 +2509,7 @@ plot(irf_tasa_des_A1)
 
 #Ahora el impulso respuesta del precio del cobre, ante una innovación en las otras variables
 
-irf_pcob_A1=irf(var_A1, response ="precio_cobre_diff", n.ahead=8, boot=TRUE)
+irf_pcob_A1=irf(var_A1, response ="precio_cobre_diff", n.ahead=8, boot=TRUE, sigma(var_A1$varresult$tcambio_dolarobs_diff))
 irf_pcob_A1
 
 plot(irf_pcob_A1)
@@ -2399,4 +2526,10 @@ plot(irf_pcob_A1)
 #### LA DEPENDENCIA ACTUAL ES UN COMPONENTE QUE SE AÑADE, EN LOS MODELOS SVAR
 ## VECTORES AUTOREGRESIVOS ESTRUCTURALES (SVAR) ###
 # SVAR
-
+irf_dolar_A1= irf(var_A1, impulse = "precio_cobre_diff", response ="tcambio_dolarobs_diff", n.ahead=12, boot=TRUE, sigma(var_A1$varresult$tcambio_dolarobs_diff))
+coefirf1 <- coef(irf_dolar_A1)  
+coefirf1
+coef(irf_dolar_A1)
+sigma(irf_dolar_A1)
+plot(irf_dolar_A1, main="Función Impulso Respuesta, Precio del Cobre - Dolar Observado (VAR A1)")
+summary(coef(irf_dolar_A1))
