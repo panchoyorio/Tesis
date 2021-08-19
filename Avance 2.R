@@ -19,6 +19,7 @@ library(strucchange)
 library(quantmod)
 library(xts)
 library(Hmisc)
+library(het.test)
 
 #Importamos la base de datos
 
@@ -120,6 +121,7 @@ plot(cbind(VA_manufacturas, VA_minería), main="Valor Añadido Manufacturas - Mi
 ts.plot(precio_cobre, VA_manufacturas, main="Precio del Cobre - Valor Añadido Manufacturas", col=c( "blue", "red"))
 ts.plot(VA_minería, VA_manufacturas, main="Valor Añadido Minería - Manufacturas", col=c( "blue", "red"))
 ts.plot(tcambio_real, precio_cobre)
+ts.plot(pib_manufacturas, VA_manufacturas, main="PIB Manufacturas - Valor Añadido Manufacturas", col=c( "blue", "red"))
 
 ### Gráficos estacionales para el tipo de cambio real, la TPM, y el precio del cobre
 
@@ -1605,7 +1607,7 @@ normvar_A1$jb.mul
 
 #Procedemos a realizar la prueba de homocedasticidad de la varianza de los residuales
 
-arch_A1 <- arch.test(var_A1, lags.multi = 3)
+arch_A1 <- arch.test(var_A1, lags.multi = 1)
 
 #H0: La varianza de los residuales es constante (pvalue >  0,05) 
 #H1: La varianza de los residuales no es constante (pvalue < 0,05)
@@ -1764,7 +1766,7 @@ normvar_A2$jb.mul
 
 #Procedemos a realizar la prueba de homocedasticidad de la varianza de los residuales
 
-arch_A2 <- arch.test(var_A2, lags.multi = 3)
+arch_A2 <- arch.test(var_A2, lags.multi = 1)
 
 #H0: La varianza de los residuales es constante (pvalue >  0,05) 
 #H1: La varianza de los residuales no es constante (pvalue < 0,05)
@@ -1851,6 +1853,7 @@ ejvarA3
 
 VARselect(ejvarA3, lag.max = 3)
 
+pacf(ejvarA3)
 #Los criterios indican:
 #AIC(n)  HQ(n)  SC(n) FPE(n) 
 #3      1      1      3  
@@ -1900,7 +1903,7 @@ normvar_A3$jb.mul
 
 #Procedemos a realizar la prueba de homocedasticidad de la varianza de los residuales
 
-arch_A3 <- arch.test(var_A3, lags.multi = 3)
+arch_A3 <- arch.test(var_A3, lags.multi = 4)
 
 #H0: La varianza de los residuales es constante (pvalue >  0,05) 
 #H1: La varianza de los residuales no es constante (pvalue < 0,05)
@@ -1994,7 +1997,7 @@ summary(var_B1)
 #de estabilidad.
 
 #Lo graficamos
-plot(var_B1)
+plot(var_B1, xlab(label = 20))
 
 ###Haremos la prueba de autocorrelación serial en los residuales
 
@@ -2093,9 +2096,7 @@ plot(irf_tasa_des_B1, main="Función Impulso Respuesta, Precio del Cobre - Tasa 
 irf_pcob_B1=irf(var_B1, impulse = "precio_cobre_diff", response ="precio_cobre_diff", n.ahead=12, boot=TRUE)
 irf_pcob_B1
 
-plot(irf_pcob_B1, main="Función Impulso Respuesta, Precio del Cobre - Precio del Cobre (VAR B1)")
-
-
+plot(irf_pcob_B1)
 
 ############################
 
@@ -2266,7 +2267,7 @@ serialvar_B3$serial
 
 normvar_B3=normality.test(var_B3)
 normvar_B3$jb.mul
-
+normvar_B3$resid
 #Sesgo -> p-value = 7.499e-07
 
 
